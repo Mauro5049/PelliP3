@@ -66,6 +66,16 @@ namespace PelliP3
 
         }
 
+        private void progressBarChange()
+        {
+            Debug.WriteLine(musicPlayer.getSource().Length);
+            if (musicPlayer.isMusicPlaying() == true)
+            {
+                songProgressBar.Value = unchecked((int)((musicPlayer.getSource().Position / 60) / 100));
+                progressBarChange();
+            }
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
            if (musicPlayer.getSource() == null) return;
@@ -78,6 +88,7 @@ namespace PelliP3
             { 
                 pSongButton.Text = "||";
                 musicPlayer.startPlaying();
+                progressBarChange();
             }
         }
 

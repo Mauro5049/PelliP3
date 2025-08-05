@@ -39,6 +39,7 @@ namespace PelliP3
             this.loadButton = new System.Windows.Forms.Button();
             this.songOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
+            this.songProgressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,7 +74,7 @@ namespace PelliP3
             // 
             // prevSongButton
             // 
-            this.prevSongButton.Location = new System.Drawing.Point(482, 332);
+            this.prevSongButton.Location = new System.Drawing.Point(482, 373);
             this.prevSongButton.Name = "prevSongButton";
             this.prevSongButton.Size = new System.Drawing.Size(75, 23);
             this.prevSongButton.TabIndex = 3;
@@ -83,7 +84,7 @@ namespace PelliP3
             // 
             // nextSongButton
             // 
-            this.nextSongButton.Location = new System.Drawing.Point(644, 332);
+            this.nextSongButton.Location = new System.Drawing.Point(644, 373);
             this.nextSongButton.Name = "nextSongButton";
             this.nextSongButton.Size = new System.Drawing.Size(75, 23);
             this.nextSongButton.TabIndex = 4;
@@ -93,7 +94,7 @@ namespace PelliP3
             // 
             // pSongButton
             // 
-            this.pSongButton.Location = new System.Drawing.Point(563, 332);
+            this.pSongButton.Location = new System.Drawing.Point(563, 373);
             this.pSongButton.Name = "pSongButton";
             this.pSongButton.Size = new System.Drawing.Size(75, 23);
             this.pSongButton.TabIndex = 5;
@@ -118,11 +119,19 @@ namespace PelliP3
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
             // 
+            // songProgressBar
+            // 
+            this.songProgressBar.Location = new System.Drawing.Point(482, 346);
+            this.songProgressBar.Name = "songProgressBar";
+            this.songProgressBar.Size = new System.Drawing.Size(237, 10);
+            this.songProgressBar.TabIndex = 7;
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.songProgressBar);
             this.Controls.Add(this.songCoverPlayer);
             this.Controls.Add(this.songTitlePlayer);
             this.Controls.Add(this.songArtistPlayer);
@@ -150,6 +159,7 @@ namespace PelliP3
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.OpenFileDialog songOpenFileDialog;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ProgressBar songProgressBar;
     }
 }
 
