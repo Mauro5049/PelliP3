@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -48,7 +49,6 @@ namespace PelliP3
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -68,14 +68,14 @@ namespace PelliP3
 
         private void button3_Click(object sender, EventArgs e)
         {
+           if (musicPlayer.getSource() == null) return;
             if (musicPlayer.isMusicPlaying())
             {
                 pSongButton.Text = @"|>";
                 musicPlayer.stopPlaying();
             }
-
             else
-            {
+            { 
                 pSongButton.Text = "||";
                 musicPlayer.startPlaying();
             }
@@ -86,6 +86,7 @@ namespace PelliP3
             if (songOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 loadSongInformation(songOpenFileDialog.FileName);
+                musicPlayer.changeSong(songOpenFileDialog.FileName);
             }
         }
     }
