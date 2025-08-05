@@ -47,6 +47,7 @@ namespace PelliP3
             this.songCoverPlayer.Location = new System.Drawing.Point(504, 78);
             this.songCoverPlayer.Name = "songCoverPlayer";
             this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
+            this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.songCoverPlayer.TabIndex = 0;
             this.songCoverPlayer.TabStop = false;
             // 
@@ -96,7 +97,7 @@ namespace PelliP3
             this.pSongButton.Name = "pSongButton";
             this.pSongButton.Size = new System.Drawing.Size(75, 23);
             this.pSongButton.TabIndex = 5;
-            this.pSongButton.Text = "P";
+            this.pSongButton.Text = "|>";
             this.pSongButton.UseVisualStyleBackColor = true;
             this.pSongButton.Click += new System.EventHandler(this.button3_Click);
             // 
