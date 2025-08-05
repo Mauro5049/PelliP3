@@ -9,14 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.WindowsAPICodePack.Shell;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace PelliP3
 {
     public partial class mainWindow : Form
     {
-        ShellObject shellObject;
         public static Image ConvertObjectToImage(object obj)
         {
             if (obj is Image img)
@@ -38,15 +35,9 @@ namespace PelliP3
         }
         private void loadSongInformation(string songName)
         {
-            shellObject = ShellObject.FromParsingName(songName);
-            if (shellObject == null)
-            {
-                Debug.WriteLine("Error.");
-                return;
-            }
-            songTitlePlayer.Text = shellObject.Properties.GetProperty(SystemProperties.System.Title).ValueAsObject.ToString();
-            songArtistPlayer.Text = shellObject.Properties.GetProperty(SystemProperties.System.Music.AlbumArtist).ValueAsObject.ToString();
-            songCoverPlayer.Image = ConvertObjectToImage(shellObject.Properties.GetProperty(SystemProperties.System.Thumbnail).Bitmap);
+            var tfile = TagLib.File.Create(songName);
+            songArtistPlayer.Text = tfile.Tag.FirstPerformer;
+            songTitlePlayer.Text = tfile.Tag.Title;
         }
         public mainWindow()
         {

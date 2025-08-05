@@ -15,7 +15,6 @@ namespace PelliP3
         [STAThread]
         static void Main()
         {
-            Debug.WriteLine("Shine on you crazy diamond!");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new mainWindow());
