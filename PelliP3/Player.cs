@@ -27,7 +27,7 @@ namespace PelliP3
             for (int i = 0; i < songQueue.Length; i++)
             {
                 if (songQueue[i] == songPath) { return; }
-                if (songQueue[i]  != null) { index = i; break; }
+                if (songQueue[i] == null) { index = i; break; }
             }
             songQueue[index] = songPath;
         }
@@ -113,7 +113,6 @@ namespace PelliP3
                 loadSongInformation(songOpenFileDialog.FileName);
                 musicPlayer.changeSong(songOpenFileDialog.FileName);
                 addToSongQueue(songQueue, songOpenFileDialog.FileName);
-                Debug.WriteLine(songQueue);
             }
         }
     }
