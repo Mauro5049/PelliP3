@@ -121,6 +121,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SongUtils.cs" />
     <Compile Include="WindowUtils.cs" />
     <EmbeddedResource Include="Player.resx">
       <DependentUpon>Player.cs</DependentUpon>

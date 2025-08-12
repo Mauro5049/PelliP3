@@ -24,7 +24,7 @@ namespace PelliP3
         {
             return source;
         }
-        public void changeSong(string path)
+        public void changeSong(SongUtils.Song song)
         {
             if (isMusicPlaying())
             {
@@ -32,7 +32,7 @@ namespace PelliP3
                 source.Dispose();
                 songPosition = 0;
             }
-            source = CodecFactory.Instance.GetCodec(path);
+            source = CodecFactory.Instance.GetCodec(song.Path);
         }
         public void startPlaying()
         {

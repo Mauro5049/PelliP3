@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PelliP3.Properties;
+using static PelliP3.SongUtils;
 
 namespace PelliP3
 {
@@ -19,17 +20,17 @@ namespace PelliP3
         MusicPlayer musicPlayer = new MusicPlayer();
         string defaultArtistName = String.Empty;
         string defaultAlbumName = String.Empty;
-        string[] songQueue = new string[256];
+        SongUtils.Song[] songQueue = new SongUtils.Song[256];
 
-        private void addToSongQueue(string[] songQueue, string songPath)
+        private void addToSongQueue(SongUtils.Song[] songQueue, SongUtils.Song song)
         {
             int index = 0;
             for (int i = 0; i < songQueue.Length; i++)
             {
-                if (songQueue[i] == songPath) { return; }
+                if (songQueue[i] == song) { return; }
                 if (songQueue[i] == null) { index = i; break; }
             }
-            songQueue[index] = songPath;
+            songQueue[index] = song;
         }
        private Panel CreateSongQueueEntry(SongUtils.Song song)
         {
@@ -39,7 +40,7 @@ namespace PelliP3
             songEntry.Size = new Size(391, 27);
 
             PictureBox cover = new PictureBox();
-            cover.Image = song.Cover ?? Properties.Resources.defaultAlbumCover;
+            cover.Image = song.Cover;
             cover.Location = new Point(3, 0);
             cover.Size = new Size(27, 27);
             cover.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -77,16 +78,40 @@ namespace PelliP3
                 throw new InvalidCastException("Object cannot be converted to Image.");
             }
         }
-        private void loadSongInformation(string songName)
+        private SongUtils.Song loadSongInformation(string songName)
         {
+            SongUtils.Song song = new SongUtils.Song();
             var tfile = TagLib.File.Create(songName);
-            if (tfile.Tag.FirstPerformer != null) songArtistPlayer.Text = tfile.Tag.FirstPerformer;
-            else songArtistPlayer.Text = defaultArtistName;
-            if (tfile.Tag.Title != null) songTitlePlayer.Text = tfile.Tag.Title;
-            else songTitlePlayer.Text = tfile.Name;
-            if (tfile.Tag.Pictures.Length > 0) songCoverPlayer.Image = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
-            else songCoverPlayer.Image = Resources.defaultAlbumCover;
+            if (tfile.Tag.FirstPerformer != null) song.Band = tfile.Tag.FirstPerformer;
+            else song.Band = defaultArtistName;
+            if (tfile.Tag.Title != null) song.Name = tfile.Tag.Title;
+            else song.Name = tfile.Name;
+            if (tfile.Tag.Pictures.Length > 0) song.Cover = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
+            else song.Cover = Resources.defaultAlbumCover;
+            song.Album = tfile.Tag.Album;
+            song.Path = songName;
+            return song;
+        }
+        private void displaySongInformation(SongUtils.Song song)
+        {
+            songArtistPlayer.Text = song.Band;
+            songCoverPlayer.Image = song.Cover;
+            songTitlePlayer.Text = song.Name;
+        }
+        private void refreshSongPlaylist(SongUtils.Song[] queue)
+        {
+            int yOffset = 14;
+            for (int i = 0; i < queue.Length; i++)
+            {
+                if (queue[i] == null) continue;
+                Panel entry = CreateSongQueueEntry(queue[i]);
+                entry.Location = new Point(14, yOffset);
+                songQueuePanel.Controls.Add(entry);
+
+                yOffset += 35;
+            }
             GC.Collect();
+
         }
         public mainWindow()
         {
@@ -137,9 +162,11 @@ namespace PelliP3
         {
             if (songOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                loadSongInformation(songOpenFileDialog.FileName);
-                musicPlayer.changeSong(songOpenFileDialog.FileName);
-                addToSongQueue(songQueue, songOpenFileDialog.FileName);
+                var surface_strait = loadSongInformation(songOpenFileDialog.FileName);
+                addToSongQueue(songQueue, surface_strait);
+                musicPlayer.changeSong(surface_strait);
+                displaySongInformation(surface_strait);
+                refreshSongPlaylist(songQueue);
             }
         }
     }
