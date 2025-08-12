@@ -31,6 +31,33 @@ namespace PelliP3
             }
             songQueue[index] = songPath;
         }
+       private Panel CreateSongQueueEntry(SongUtils.Song song)
+        {
+            Panel songEntry = new Panel();
+            songEntry.BackColor = Color.Silver;
+            songEntry.BorderStyle = BorderStyle.FixedSingle;
+            songEntry.Size = new Size(391, 27);
+
+            PictureBox cover = new PictureBox();
+            cover.Image = song.Cover ?? Properties.Resources.defaultAlbumCover;
+            cover.Location = new Point(3, 0);
+            cover.Size = new Size(27, 27);
+            cover.SizeMode = PictureBoxSizeMode.StretchImage;
+            songEntry.Controls.Add(cover);
+
+            Label nameLabel = new Label();
+            nameLabel.Text = song.Name;
+            nameLabel.Location = new Point(36, 7);
+            songEntry.Controls.Add(nameLabel);
+
+            Label durationLabel = new Label();
+            durationLabel.Text = song.Duration.ToString(@"hh\:mm\:ss");
+            durationLabel.Location = new Point(339, 7);
+            songEntry.Controls.Add(durationLabel);
+
+            return songEntry;
+        }
+
         public static Image ConvertObjectToImage(object obj)
         {
             if (obj is Image img)

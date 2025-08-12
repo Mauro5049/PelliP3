@@ -40,8 +40,15 @@ namespace PelliP3
             this.songOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
             this.songProgressBar = new System.Windows.Forms.ProgressBar();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.songQueuePanel = new System.Windows.Forms.Panel();
+            this.songQueueEntry = new System.Windows.Forms.Panel();
+            this.songQueueEntryCover = new System.Windows.Forms.PictureBox();
+            this.songQueueEntryName = new System.Windows.Forms.Label();
+            this.songQueueEntryDuration = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
+            this.songQueuePanel.SuspendLayout();
+            this.songQueueEntry.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.songQueueEntryCover)).BeginInit();
             this.SuspendLayout();
             // 
             // songCoverPlayer
@@ -129,20 +136,62 @@ namespace PelliP3
             this.songProgressBar.Size = new System.Drawing.Size(237, 10);
             this.songProgressBar.TabIndex = 7;
             // 
-            // panel1
+            // songQueuePanel
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.panel1.Location = new System.Drawing.Point(38, 78);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(416, 318);
-            this.panel1.TabIndex = 8;
+            this.songQueuePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.songQueuePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.songQueuePanel.Controls.Add(this.songQueueEntry);
+            this.songQueuePanel.Location = new System.Drawing.Point(38, 78);
+            this.songQueuePanel.Name = "songQueuePanel";
+            this.songQueuePanel.Size = new System.Drawing.Size(416, 318);
+            this.songQueuePanel.TabIndex = 8;
+            // 
+            // songQueueEntry
+            // 
+            this.songQueueEntry.BackColor = System.Drawing.Color.Silver;
+            this.songQueueEntry.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.songQueueEntry.Controls.Add(this.songQueueEntryDuration);
+            this.songQueueEntry.Controls.Add(this.songQueueEntryName);
+            this.songQueueEntry.Controls.Add(this.songQueueEntryCover);
+            this.songQueueEntry.Location = new System.Drawing.Point(14, 14);
+            this.songQueueEntry.Name = "songQueueEntry";
+            this.songQueueEntry.Size = new System.Drawing.Size(391, 27);
+            this.songQueueEntry.TabIndex = 0;
+            // 
+            // songQueueEntryCover
+            // 
+            this.songQueueEntryCover.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
+            this.songQueueEntryCover.Location = new System.Drawing.Point(3, 0);
+            this.songQueueEntryCover.Name = "songQueueEntryCover";
+            this.songQueueEntryCover.Size = new System.Drawing.Size(27, 27);
+            this.songQueueEntryCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.songQueueEntryCover.TabIndex = 1;
+            this.songQueueEntryCover.TabStop = false;
+            // 
+            // songQueueEntryName
+            // 
+            this.songQueueEntryName.AutoSize = true;
+            this.songQueueEntryName.Location = new System.Drawing.Point(36, 7);
+            this.songQueueEntryName.Name = "songQueueEntryName";
+            this.songQueueEntryName.Size = new System.Drawing.Size(32, 13);
+            this.songQueueEntryName.TabIndex = 2;
+            this.songQueueEntryName.Text = "Song";
+            // 
+            // songQueueEntryDuration
+            // 
+            this.songQueueEntryDuration.AutoSize = true;
+            this.songQueueEntryDuration.Location = new System.Drawing.Point(339, 7);
+            this.songQueueEntryDuration.Name = "songQueueEntryDuration";
+            this.songQueueEntryDuration.Size = new System.Drawing.Size(49, 13);
+            this.songQueueEntryDuration.TabIndex = 3;
+            this.songQueueEntryDuration.Text = "00:00:00";
             // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.songQueuePanel);
             this.Controls.Add(this.songProgressBar);
             this.Controls.Add(this.songCoverPlayer);
             this.Controls.Add(this.songTitlePlayer);
@@ -155,6 +204,10 @@ namespace PelliP3
             this.Text = "PelliP3";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).EndInit();
+            this.songQueuePanel.ResumeLayout(false);
+            this.songQueueEntry.ResumeLayout(false);
+            this.songQueueEntry.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.songQueueEntryCover)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -172,7 +225,11 @@ namespace PelliP3
         private System.Windows.Forms.OpenFileDialog songOpenFileDialog;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ProgressBar songProgressBar;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel songQueuePanel;
+        private System.Windows.Forms.Panel songQueueEntry;
+        private System.Windows.Forms.PictureBox songQueueEntryCover;
+        private System.Windows.Forms.Label songQueueEntryName;
+        private System.Windows.Forms.Label songQueueEntryDuration;
     }
 }
 
