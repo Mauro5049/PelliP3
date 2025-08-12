@@ -15,7 +15,7 @@ namespace PelliP3
         public static void drawTextCentered(Label text, Size ClientSize)
         {
             Size textSize = TextRenderer.MeasureText(text.Text, text.Font);
-            text.Location = new Point((ClientSize.Width - textSize.Width) / 2, text.Location.Y);
+            text.Location = new Point((ClientSize.Width - textSize.Width), text.Location.Y);
         }
     }
 }

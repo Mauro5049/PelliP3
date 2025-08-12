@@ -10,12 +10,27 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PelliP3.Properties;
 
 namespace PelliP3
 {
     public partial class mainWindow : Form
     {
         MusicPlayer musicPlayer = new MusicPlayer();
+        string defaultArtistName = String.Empty;
+        string defaultAlbumName = String.Empty;
+        string[] songQueue = new string[256];
+
+        private void addToSongQueue(string[] songQueue, string songPath)
+        {
+            int index = 0;
+            for (int i = 0; i < songQueue.Length; i++)
+            {
+                if (songQueue[i] == songPath) { return; }
+                if (songQueue[i]  != null) { index = i; break; }
+            }
+            songQueue[index] = songPath;
+        }
         public static Image ConvertObjectToImage(object obj)
         {
             if (obj is Image img)
@@ -38,9 +53,13 @@ namespace PelliP3
         private void loadSongInformation(string songName)
         {
             var tfile = TagLib.File.Create(songName);
-            songArtistPlayer.Text = tfile.Tag.FirstPerformer;
-            songTitlePlayer.Text = tfile.Tag.Title;
-            songCoverPlayer.Image = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
+            if (tfile.Tag.FirstPerformer != null) songArtistPlayer.Text = tfile.Tag.FirstPerformer;
+            else songArtistPlayer.Text = defaultArtistName;
+            if (tfile.Tag.Title != null) songTitlePlayer.Text = tfile.Tag.Title;
+            else songTitlePlayer.Text = tfile.Name;
+            if (tfile.Tag.Pictures.Length > 0) songCoverPlayer.Image = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
+            else songCoverPlayer.Image = Resources.defaultAlbumCover;
+            GC.Collect();
         }
         public mainWindow()
         {
@@ -68,12 +87,7 @@ namespace PelliP3
 
         private void progressBarChange()
         {
-            Debug.WriteLine(musicPlayer.getSource().Length);
-            if (musicPlayer.isMusicPlaying() == true)
-            {
-                songProgressBar.Value = unchecked((int)((musicPlayer.getSource().Position / 60) / 100));
-                progressBarChange();
-            }
+            Debug.WriteLine("TODO");
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -98,6 +112,8 @@ namespace PelliP3
             {
                 loadSongInformation(songOpenFileDialog.FileName);
                 musicPlayer.changeSong(songOpenFileDialog.FileName);
+                addToSongQueue(songQueue, songOpenFileDialog.FileName);
+                Debug.WriteLine(songQueue);
             }
         }
     }

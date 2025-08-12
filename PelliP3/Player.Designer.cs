@@ -40,11 +40,14 @@ namespace PelliP3
             this.songOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
             this.songProgressBar = new System.Windows.Forms.ProgressBar();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
             this.SuspendLayout();
             // 
             // songCoverPlayer
             // 
+            this.songCoverPlayer.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
+            this.songCoverPlayer.InitialImage = null;
             this.songCoverPlayer.Location = new System.Drawing.Point(504, 78);
             this.songCoverPlayer.Name = "songCoverPlayer";
             this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
@@ -104,11 +107,11 @@ namespace PelliP3
             // 
             // loadButton
             // 
-            this.loadButton.Location = new System.Drawing.Point(91, 200);
+            this.loadButton.Location = new System.Drawing.Point(12, 12);
             this.loadButton.Name = "loadButton";
-            this.loadButton.Size = new System.Drawing.Size(295, 23);
+            this.loadButton.Size = new System.Drawing.Size(27, 23);
             this.loadButton.TabIndex = 6;
-            this.loadButton.Text = "deixe um like se você é um fodinha!!!";
+            this.loadButton.Text = "+";
             this.loadButton.UseVisualStyleBackColor = true;
             this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
             // 
@@ -126,11 +129,20 @@ namespace PelliP3
             this.songProgressBar.Size = new System.Drawing.Size(237, 10);
             this.songProgressBar.TabIndex = 7;
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.panel1.Location = new System.Drawing.Point(38, 78);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(416, 318);
+            this.panel1.TabIndex = 8;
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.songProgressBar);
             this.Controls.Add(this.songCoverPlayer);
             this.Controls.Add(this.songTitlePlayer);
@@ -160,6 +172,7 @@ namespace PelliP3
         private System.Windows.Forms.OpenFileDialog songOpenFileDialog;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ProgressBar songProgressBar;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
