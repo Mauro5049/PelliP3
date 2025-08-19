@@ -27,8 +27,8 @@ namespace PelliP3
             int index = 0;
             for (int i = 0; i < songQueue.Length; i++)
             {
-                if (songQueue[i] == song) { return; }
                 if (songQueue[i] == null) { index = i; break; }
+                if (songQueue[i].Path == song.Path) { return; }
             }
             songQueue[index] = song;
         }
@@ -38,6 +38,7 @@ namespace PelliP3
             songEntry.BackColor = Color.Silver;
             songEntry.BorderStyle = BorderStyle.FixedSingle;
             songEntry.Size = new Size(391, 27);
+            songEntry.Click += (sender, e) => changeUISong(song);
 
             PictureBox cover = new PictureBox();
             cover.Image = song.Cover;
@@ -45,11 +46,13 @@ namespace PelliP3
             cover.Size = new Size(27, 27);
             cover.SizeMode = PictureBoxSizeMode.StretchImage;
             songEntry.Controls.Add(cover);
+            cover.Click += (sender, e) => changeUISong(song);
 
             Label nameLabel = new Label();
             nameLabel.Text = song.Name;
             nameLabel.Location = new Point(36, 7);
             songEntry.Controls.Add(nameLabel);
+            nameLabel.Click += (sender, e) => changeUISong(song);
 
             Label durationLabel = new Label();
             durationLabel.Text = song.Duration.ToString(@"hh\:mm\:ss");
@@ -57,6 +60,13 @@ namespace PelliP3
             songEntry.Controls.Add(durationLabel);
 
             return songEntry;
+        }
+
+        private void changeUISong(SongUtils.Song song)
+        {
+            musicPlayer.changeSong(song);
+            displaySongInformation(song);
+            pSongButton.Text = @"|>";
         }
 
         public static Image ConvertObjectToImage(object obj)
