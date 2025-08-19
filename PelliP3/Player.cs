@@ -16,6 +16,7 @@ namespace PelliP3
         private readonly List<SongUtils.Song> songQueue = new List<SongUtils.Song>(256);
         private string defaultArtistName = string.Empty;
         private string defaultAlbumName = string.Empty;
+        private Timer progressTimer;
 
         private void addToSongQueue(SongUtils.Song song)
         {
@@ -71,6 +72,7 @@ namespace PelliP3
             musicPlayer.changeSong(song);
             displaySongInformation(song);
             pSongButton.Text = "|>";
+            progressTimer.Stop();
         }
 
         public static Image ConvertObjectToImage(object obj)
@@ -137,6 +139,8 @@ namespace PelliP3
         public mainWindow()
         {
             InitializeComponent();
+            progressTimer = new Timer { Interval = 1000 };
+            progressTimer.Tick += (s, e) => progressBarChange();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -157,6 +161,26 @@ namespace PelliP3
 
         private void progressBarChange()
         {
+            var source = musicPlayer.getSource();
+            if (source == null) return;
+
+            double current = source.Position;
+            double total = source.Length;
+            if (total <= 0) return;
+
+            int progress = (int)Math.Round((current / total) * 100);
+            if (progress < 0) progress = 0;
+            if (progress > 100) progress = 100;
+            songProgressBar.Value = progress;
+
+            // todo: separate song in secs, mins & hours to adjust currenttimelabel
+            double secs = source.Position / 100000;
+            double mins = secs / 60;
+            double hours = mins / 60;
+
+            Debug.WriteLine($"{Math.Round(hours)}:{Math.Round(mins)}:{Math.Round(secs)}");
+
+            currentTimeLabel.Text = current.ToString();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -166,12 +190,14 @@ namespace PelliP3
             {
                 pSongButton.Text = "|>";
                 musicPlayer.stopPlaying();
+                progressTimer.Stop();
             }
             else
             {
                 pSongButton.Text = "||";
                 musicPlayer.startPlaying();
-                progressBarChange();
+                progressTimer.Start();
+                musicPlayer.getSource().Position = musicPlayer.getSource().Length / 2;
             }
         }
 

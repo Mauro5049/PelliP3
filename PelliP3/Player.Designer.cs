@@ -146,7 +146,7 @@ namespace PelliP3
             // currentTimeLabel
             // 
             this.currentTimeLabel.AutoSize = true;
-            this.currentTimeLabel.Location = new System.Drawing.Point(577, 352);
+            this.currentTimeLabel.Location = new System.Drawing.Point(580, 352);
             this.currentTimeLabel.Name = "currentTimeLabel";
             this.currentTimeLabel.Size = new System.Drawing.Size(49, 13);
             this.currentTimeLabel.TabIndex = 9;
