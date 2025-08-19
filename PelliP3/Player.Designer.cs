@@ -41,6 +41,7 @@ namespace PelliP3
             this.button1 = new System.Windows.Forms.Button();
             this.songProgressBar = new System.Windows.Forms.ProgressBar();
             this.songQueuePanel = new System.Windows.Forms.Panel();
+            this.currentTimeLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,6 +116,10 @@ namespace PelliP3
             this.loadButton.UseVisualStyleBackColor = true;
             this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
             // 
+            // songOpenFileDialog
+            // 
+            this.songOpenFileDialog.Filter = ".flac, .mp3, .ogg, .wav|*.flac;*.mp3;*.ogg;*.wav";
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(0, 0);
@@ -124,9 +129,9 @@ namespace PelliP3
             // 
             // songProgressBar
             // 
-            this.songProgressBar.Location = new System.Drawing.Point(482, 346);
+            this.songProgressBar.Location = new System.Drawing.Point(504, 335);
             this.songProgressBar.Name = "songProgressBar";
-            this.songProgressBar.Size = new System.Drawing.Size(237, 10);
+            this.songProgressBar.Size = new System.Drawing.Size(200, 10);
             this.songProgressBar.TabIndex = 7;
             // 
             // songQueuePanel
@@ -138,11 +143,21 @@ namespace PelliP3
             this.songQueuePanel.Size = new System.Drawing.Size(416, 318);
             this.songQueuePanel.TabIndex = 8;
             // 
+            // currentTimeLabel
+            // 
+            this.currentTimeLabel.AutoSize = true;
+            this.currentTimeLabel.Location = new System.Drawing.Point(577, 352);
+            this.currentTimeLabel.Name = "currentTimeLabel";
+            this.currentTimeLabel.Size = new System.Drawing.Size(49, 13);
+            this.currentTimeLabel.TabIndex = 9;
+            this.currentTimeLabel.Text = "00:00:00";
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.currentTimeLabel);
             this.Controls.Add(this.songQueuePanel);
             this.Controls.Add(this.songProgressBar);
             this.Controls.Add(this.songCoverPlayer);
@@ -174,6 +189,7 @@ namespace PelliP3
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ProgressBar songProgressBar;
         private System.Windows.Forms.Panel songQueuePanel;
+        private System.Windows.Forms.Label currentTimeLabel;
     }
 }
 
