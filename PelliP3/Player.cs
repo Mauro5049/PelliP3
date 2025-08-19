@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using PelliP3.Properties;
 using static PelliP3.SongUtils;
@@ -17,46 +12,54 @@ namespace PelliP3
 {
     public partial class mainWindow : Form
     {
-        MusicPlayer musicPlayer = new MusicPlayer();
-        string defaultArtistName = String.Empty;
-        string defaultAlbumName = String.Empty;
-        SongUtils.Song[] songQueue = new SongUtils.Song[256];
+        private readonly MusicPlayer musicPlayer = new MusicPlayer();
+        private readonly List<SongUtils.Song> songQueue = new List<SongUtils.Song>(256);
+        private string defaultArtistName = string.Empty;
+        private string defaultAlbumName = string.Empty;
 
-        private void addToSongQueue(SongUtils.Song[] songQueue, SongUtils.Song song)
+        private void addToSongQueue(SongUtils.Song song)
         {
-            int index = 0;
-            for (int i = 0; i < songQueue.Length; i++)
-            {
-                if (songQueue[i] == null) { index = i; break; }
-                if (songQueue[i].Path == song.Path) { return; }
-            }
-            songQueue[index] = song;
+            if (song == null || string.IsNullOrEmpty(song.Path)) return;
+            if (songQueue.Any(s => string.Equals(s?.Path, song.Path, StringComparison.OrdinalIgnoreCase))) return;
+            if (songQueue.Count >= 256) return;
+            songQueue.Add(song);
         }
-       private Panel CreateSongQueueEntry(SongUtils.Song song)
+
+        private Panel CreateSongQueueEntry(SongUtils.Song song)
         {
-            Panel songEntry = new Panel();
-            songEntry.BackColor = Color.Silver;
-            songEntry.BorderStyle = BorderStyle.FixedSingle;
-            songEntry.Size = new Size(391, 27);
+            var songEntry = new Panel
+            {
+                BackColor = Color.Silver,
+                BorderStyle = BorderStyle.FixedSingle,
+                Size = new Size(391, 27)
+            };
             songEntry.Click += (sender, e) => changeUISong(song);
 
-            PictureBox cover = new PictureBox();
-            cover.Image = song.Cover;
-            cover.Location = new Point(3, 0);
-            cover.Size = new Size(27, 27);
-            cover.SizeMode = PictureBoxSizeMode.StretchImage;
+            var cover = new PictureBox
+            {
+                Image = song?.Cover ?? Resources.defaultAlbumCover,
+                Location = new Point(3, 0),
+                Size = new Size(27, 27),
+                SizeMode = PictureBoxSizeMode.StretchImage
+            };
             songEntry.Controls.Add(cover);
             cover.Click += (sender, e) => changeUISong(song);
 
-            Label nameLabel = new Label();
-            nameLabel.Text = song.Name;
-            nameLabel.Location = new Point(36, 7);
+            var nameLabel = new Label
+            {
+                Text = song?.Name ?? string.Empty,
+                Location = new Point(36, 7),
+                AutoSize = true
+            };
             songEntry.Controls.Add(nameLabel);
             nameLabel.Click += (sender, e) => changeUISong(song);
 
-            Label durationLabel = new Label();
-            durationLabel.Text = song.Duration.ToString(@"hh\:mm\:ss");
-            durationLabel.Location = new Point(339, 7);
+            var durationLabel = new Label
+            {
+                Text = (song?.Duration ?? TimeSpan.Zero).ToString(@"hh\:mm\:ss"),
+                Location = new Point(339, 7),
+                AutoSize = true
+            };
             songEntry.Controls.Add(durationLabel);
 
             return songEntry;
@@ -64,9 +67,10 @@ namespace PelliP3
 
         private void changeUISong(SongUtils.Song song)
         {
+            if (song == null) return;
             musicPlayer.changeSong(song);
             displaySongInformation(song);
-            pSongButton.Text = @"|>";
+            pSongButton.Text = "|>";
         }
 
         public static Image ConvertObjectToImage(object obj)
@@ -75,54 +79,61 @@ namespace PelliP3
             {
                 return img;
             }
-            else if (obj is byte[] bytes)
+            if (obj is byte[] bytes && bytes.Length > 0)
             {
                 using (var ms = new System.IO.MemoryStream(bytes))
                 {
                     return Image.FromStream(ms);
                 }
             }
-            else
-            {
-                Debug.WriteLine($"{obj.GetType()}");
-                throw new InvalidCastException("Object cannot be converted to Image.");
-            }
+            throw new InvalidCastException("Object cannot be converted to Image.");
         }
+
         private SongUtils.Song loadSongInformation(string songName)
         {
-            SongUtils.Song song = new SongUtils.Song();
-            var tfile = TagLib.File.Create(songName);
-            if (tfile.Tag.FirstPerformer != null) song.Band = tfile.Tag.FirstPerformer;
-            else song.Band = defaultArtistName;
-            if (tfile.Tag.Title != null) song.Name = tfile.Tag.Title;
-            else song.Name = tfile.Name;
-            if (tfile.Tag.Pictures.Length > 0) song.Cover = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
-            else song.Cover = Resources.defaultAlbumCover;
-            song.Album = tfile.Tag.Album;
-            song.Path = songName;
+            if (string.IsNullOrEmpty(songName)) return null;
+            var song = new SongUtils.Song();
+            using (var tfile = TagLib.File.Create(songName))
+            {
+                song.Band = tfile.Tag.FirstPerformer ?? defaultArtistName;
+                song.Name = tfile.Tag.Title ?? tfile.Name ?? string.Empty;
+                song.Album = tfile.Tag.Album ?? defaultAlbumName;
+                song.Path = songName;
+                song.Duration = tfile.Properties?.Duration ?? TimeSpan.Zero;
+                if (tfile.Tag.Pictures != null && tfile.Tag.Pictures.Length > 0)
+                {
+                    song.Cover = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
+                }
+                else
+                {
+                    song.Cover = Resources.defaultAlbumCover;
+                }
+            }
             return song;
         }
+
         private void displaySongInformation(SongUtils.Song song)
         {
-            songArtistPlayer.Text = song.Band;
-            songCoverPlayer.Image = song.Cover;
-            songTitlePlayer.Text = song.Name;
+            if (song == null) return;
+            songArtistPlayer.Text = song.Band ?? string.Empty;
+            songCoverPlayer.Image = song.Cover ?? Resources.defaultAlbumCover;
+            songTitlePlayer.Text = song.Name ?? string.Empty;
         }
-        private void refreshSongPlaylist(SongUtils.Song[] queue)
+
+        private void refreshSongPlaylist()
         {
+            songQueuePanel.Controls.Clear();
             int yOffset = 14;
-            for (int i = 0; i < queue.Length; i++)
+            foreach (var s in songQueue)
             {
-                if (queue[i] == null) continue;
-                Panel entry = CreateSongQueueEntry(queue[i]);
+                if (s == null) continue;
+                var entry = CreateSongQueueEntry(s);
                 entry.Location = new Point(14, yOffset);
                 songQueuePanel.Controls.Add(entry);
-
                 yOffset += 35;
             }
-            GC.Collect();
-
         }
+
         public mainWindow()
         {
             InitializeComponent();
@@ -134,34 +145,30 @@ namespace PelliP3
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void progressBarChange()
         {
-            Debug.WriteLine("TODO");
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-           if (musicPlayer.getSource() == null) return;
+            if (musicPlayer.getSource() == null) return;
             if (musicPlayer.isMusicPlaying())
             {
-                pSongButton.Text = @"|>";
+                pSongButton.Text = "|>";
                 musicPlayer.stopPlaying();
             }
             else
-            { 
+            {
                 pSongButton.Text = "||";
                 musicPlayer.startPlaying();
                 progressBarChange();
@@ -173,10 +180,11 @@ namespace PelliP3
             if (songOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 var surface_strait = loadSongInformation(songOpenFileDialog.FileName);
-                addToSongQueue(songQueue, surface_strait);
+                if (surface_strait == null) return;
+                addToSongQueue(surface_strait);
                 musicPlayer.changeSong(surface_strait);
                 displaySongInformation(surface_strait);
-                refreshSongPlaylist(songQueue);
+                refreshSongPlaylist();
             }
         }
     }
