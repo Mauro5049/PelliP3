@@ -28,24 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.songCoverPlayer = new System.Windows.Forms.PictureBox();
+            this.songCoverEditor = new System.Windows.Forms.PictureBox();
             this.songNameEdit = new System.Windows.Forms.TextBox();
             this.artistNameEdit = new System.Windows.Forms.TextBox();
             this.saveButton = new System.Windows.Forms.Button();
             this.yearAlbumEdit = new System.Windows.Forms.MaskedTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.songCoverEditor)).BeginInit();
             this.SuspendLayout();
             // 
-            // songCoverPlayer
+            // songCoverEditor
             // 
-            this.songCoverPlayer.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
-            this.songCoverPlayer.InitialImage = null;
-            this.songCoverPlayer.Location = new System.Drawing.Point(90, 12);
-            this.songCoverPlayer.Name = "songCoverPlayer";
-            this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
-            this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.songCoverPlayer.TabIndex = 1;
-            this.songCoverPlayer.TabStop = false;
+            this.songCoverEditor.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
+            this.songCoverEditor.InitialImage = null;
+            this.songCoverEditor.Location = new System.Drawing.Point(90, 12);
+            this.songCoverEditor.Name = "songCoverEditor";
+            this.songCoverEditor.Size = new System.Drawing.Size(200, 200);
+            this.songCoverEditor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.songCoverEditor.TabIndex = 1;
+            this.songCoverEditor.TabStop = false;
             // 
             // songNameEdit
             // 
@@ -92,10 +92,11 @@
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.artistNameEdit);
             this.Controls.Add(this.songNameEdit);
-            this.Controls.Add(this.songCoverPlayer);
+            this.Controls.Add(this.songCoverEditor);
             this.Name = "Metadata";
             this.Text = "Metadata Editor";
-            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).EndInit();
+            this.Load += new System.EventHandler(this.Metadata_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.songCoverEditor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -103,7 +104,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox songCoverPlayer;
+        private System.Windows.Forms.PictureBox songCoverEditor;
         private System.Windows.Forms.TextBox songNameEdit;
         private System.Windows.Forms.TextBox artistNameEdit;
         private System.Windows.Forms.Button saveButton;

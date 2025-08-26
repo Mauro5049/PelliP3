@@ -19,15 +19,5 @@ namespace PelliP3
             public Image Cover { get; set; }
             public string Path { get; set; }
         }
-
-      /*  public void createSong(string name, TimeSpan duration, Image cover, string path)
-        {
-            Song song = new Song();
-            song.Name = name;
-            song.Duration = duration;
-            song.Cover = cover;
-            song.Path = path;
-        }
-      */
     }
 }

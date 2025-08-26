@@ -18,6 +18,7 @@ namespace PelliP3
         private string defaultArtistName = string.Empty;
         private string defaultAlbumName = string.Empty;
         private Timer progressTimer;
+        SongUtils.Song selectedSong;
         Metadata metadata;
 
         private void addToSongQueue(SongUtils.Song song)
@@ -28,15 +29,24 @@ namespace PelliP3
             songQueue.Add(song);
         }
 
+        private void changeSelectedSong(SongUtils.Song song, Panel panel)
+        {
+            panel.BackColor = Color.FromName("GradientActiveCaption");
+            
+        }
+
         private Panel CreateSongQueueEntry(SongUtils.Song song)
         {
             var songEntry = new Panel
             {
                 BackColor = Color.Silver,
                 BorderStyle = BorderStyle.FixedSingle,
-                Size = new Size(391, 27)
+                Size = new Size(391, 27),
+                Tag = song,
             };
-            songEntry.Click += (sender, e) => changeUISong(song);
+
+            songEntry.DoubleClick += (sender, e) => changeUISong(song);
+            songEntry.Click += (sender, e) => changeSelectedSong(song, songEntry);
 
             var cover = new PictureBox
             {
@@ -47,6 +57,7 @@ namespace PelliP3
             };
             songEntry.Controls.Add(cover);
             cover.Click += (sender, e) => changeUISong(song);
+            cover.Click += (sender, e) => changeSelectedSong(song, songEntry);
 
             var nameLabel = new Label
             {
@@ -56,6 +67,7 @@ namespace PelliP3
             };
             songEntry.Controls.Add(nameLabel);
             nameLabel.Click += (sender, e) => changeUISong(song);
+            nameLabel.Click += (sender, e) => changeSelectedSong(song, songEntry);
 
             var durationLabel = new Label
             {

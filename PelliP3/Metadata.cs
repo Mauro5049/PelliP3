@@ -16,5 +16,10 @@ namespace PelliP3
         {
             InitializeComponent();
         }
+
+        private void Metadata_Load(object sender, EventArgs e)
+        {
+            //songCoverEditor.Image = MusicPlayer.
+        }
     }
 }

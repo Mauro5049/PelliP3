@@ -30,7 +30,6 @@ namespace PelliP3
         /// </summary>
         private void InitializeComponent()
         {
-            this.songCoverPlayer = new System.Windows.Forms.PictureBox();
             this.songTitlePlayer = new System.Windows.Forms.Label();
             this.songArtistPlayer = new System.Windows.Forms.Label();
             this.prevSongButton = new System.Windows.Forms.Button();
@@ -47,20 +46,10 @@ namespace PelliP3
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
+            this.songCoverPlayer = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
             this.SuspendLayout();
-            // 
-            // songCoverPlayer
-            // 
-            this.songCoverPlayer.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
-            this.songCoverPlayer.InitialImage = null;
-            this.songCoverPlayer.Location = new System.Drawing.Point(478, 27);
-            this.songCoverPlayer.Name = "songCoverPlayer";
-            this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
-            this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.songCoverPlayer.TabIndex = 0;
-            this.songCoverPlayer.TabStop = false;
             // 
             // songTitlePlayer
             // 
@@ -193,8 +182,19 @@ namespace PelliP3
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
+            // 
+            // songCoverPlayer
+            // 
+            this.songCoverPlayer.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
+            this.songCoverPlayer.InitialImage = null;
+            this.songCoverPlayer.Location = new System.Drawing.Point(478, 27);
+            this.songCoverPlayer.Name = "songCoverPlayer";
+            this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
+            this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.songCoverPlayer.TabIndex = 0;
+            this.songCoverPlayer.TabStop = false;
             // 
             // mainWindow
             // 
@@ -215,9 +215,9 @@ namespace PelliP3
             this.Name = "mainWindow";
             this.Text = "PelliP3";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
