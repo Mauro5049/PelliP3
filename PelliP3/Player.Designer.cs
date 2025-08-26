@@ -188,6 +188,7 @@ namespace PelliP3
             this.editMetadataToolStripMenuItem.Name = "editMetadataToolStripMenuItem";
             this.editMetadataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.editMetadataToolStripMenuItem.Text = "Edit Metadata";
+            this.editMetadataToolStripMenuItem.Click += new System.EventHandler(this.editMetadataToolStripMenuItem_Click);
             // 
             // clearToolStripMenuItem
             // 

@@ -18,6 +18,7 @@ namespace PelliP3
         private string defaultArtistName = string.Empty;
         private string defaultAlbumName = string.Empty;
         private Timer progressTimer;
+        Metadata metadata;
 
         private void addToSongQueue(SongUtils.Song song)
         {
@@ -143,6 +144,7 @@ namespace PelliP3
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            metadata = new Metadata();
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -197,6 +199,11 @@ namespace PelliP3
                 displaySongInformation(surface_strait);
                 refreshSongPlaylist();
             }
+        }
+
+        private void editMetadataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            metadata.ShowDialog();
         }
     }
 }

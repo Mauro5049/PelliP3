@@ -107,6 +107,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metadata.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Metadata.Designer.cs">
+      <DependentUpon>Metadata.cs</DependentUpon>
+    </Compile>
     <Compile Include="MusicPlayer.cs" />
     <Compile Include="Player.cs">
       <SubType>Form</SubType>
@@ -123,6 +129,9 @@
     </Compile>
     <Compile Include="SongUtils.cs" />
     <Compile Include="WindowUtils.cs" />
+    <EmbeddedResource Include="Metadata.resx">
+      <DependentUpon>Metadata.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Player.resx">
       <DependentUpon>Player.cs</DependentUpon>
     </EmbeddedResource>
