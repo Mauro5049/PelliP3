@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using PelliP3.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static PelliP3.SongUtils;
 
 namespace PelliP3
@@ -73,6 +74,7 @@ namespace PelliP3
             displaySongInformation(song);
             pSongButton.Text = "|>";
             progressTimer.Stop();
+            songProgressBar.Value = 0;
         }
 
         public static Image ConvertObjectToImage(object obj)
@@ -105,10 +107,6 @@ namespace PelliP3
                 if (tfile.Tag.Pictures != null && tfile.Tag.Pictures.Length > 0)
                 {
                     song.Cover = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
-                }
-                else
-                {
-                    song.Cover = Resources.defaultAlbumCover;
                 }
             }
             return song;
@@ -164,23 +162,11 @@ namespace PelliP3
             var source = musicPlayer.getSource();
             if (source == null) return;
 
-            double current = source.Position;
-            double total = source.Length;
-            if (total <= 0) return;
+            double secs = source.Position / source.WaveFormat.SampleRate;
+            double maxSecs = source.Length / source.WaveFormat.SampleRate;
 
-            int progress = (int)Math.Round((current / total) * 100);
-            if (progress < 0) progress = 0;
-            if (progress > 100) progress = 100;
-            songProgressBar.Value = progress;
-
-            // todo: separate song in secs, mins & hours to adjust currenttimelabel
-            double secs = source.Position / 100000;
-            double mins = secs / 60;
-            double hours = mins / 60;
-
-            Debug.WriteLine($"{Math.Round(hours)}:{Math.Round(mins)}:{Math.Round(secs)}");
-
-            currentTimeLabel.Text = current.ToString();
+            int progress = (int)((secs / maxSecs) * 100);
+            songProgressBar.Value = Math.Min(progress, 100);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -197,7 +183,6 @@ namespace PelliP3
                 pSongButton.Text = "||";
                 musicPlayer.startPlaying();
                 progressTimer.Start();
-                musicPlayer.getSource().Position = musicPlayer.getSource().Length / 2;
             }
         }
 
