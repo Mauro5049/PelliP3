@@ -36,20 +36,26 @@ namespace PelliP3
             this.prevSongButton = new System.Windows.Forms.Button();
             this.nextSongButton = new System.Windows.Forms.Button();
             this.pSongButton = new System.Windows.Forms.Button();
-            this.loadButton = new System.Windows.Forms.Button();
             this.songOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
             this.songProgressBar = new System.Windows.Forms.ProgressBar();
             this.songQueuePanel = new System.Windows.Forms.Panel();
             this.currentTimeLabel = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playlistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // songCoverPlayer
             // 
             this.songCoverPlayer.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
             this.songCoverPlayer.InitialImage = null;
-            this.songCoverPlayer.Location = new System.Drawing.Point(504, 78);
+            this.songCoverPlayer.Location = new System.Drawing.Point(478, 27);
             this.songCoverPlayer.Name = "songCoverPlayer";
             this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
             this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -60,7 +66,7 @@ namespace PelliP3
             // 
             this.songTitlePlayer.AutoSize = true;
             this.songTitlePlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.songTitlePlayer.Location = new System.Drawing.Point(568, 281);
+            this.songTitlePlayer.Location = new System.Drawing.Point(542, 230);
             this.songTitlePlayer.Name = "songTitlePlayer";
             this.songTitlePlayer.Size = new System.Drawing.Size(66, 31);
             this.songTitlePlayer.TabIndex = 1;
@@ -70,7 +76,7 @@ namespace PelliP3
             // 
             this.songArtistPlayer.AutoSize = true;
             this.songArtistPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.songArtistPlayer.Location = new System.Drawing.Point(580, 312);
+            this.songArtistPlayer.Location = new System.Drawing.Point(554, 261);
             this.songArtistPlayer.Name = "songArtistPlayer";
             this.songArtistPlayer.Size = new System.Drawing.Size(40, 17);
             this.songArtistPlayer.TabIndex = 2;
@@ -78,7 +84,7 @@ namespace PelliP3
             // 
             // prevSongButton
             // 
-            this.prevSongButton.Location = new System.Drawing.Point(482, 373);
+            this.prevSongButton.Location = new System.Drawing.Point(456, 322);
             this.prevSongButton.Name = "prevSongButton";
             this.prevSongButton.Size = new System.Drawing.Size(75, 23);
             this.prevSongButton.TabIndex = 3;
@@ -88,7 +94,7 @@ namespace PelliP3
             // 
             // nextSongButton
             // 
-            this.nextSongButton.Location = new System.Drawing.Point(644, 373);
+            this.nextSongButton.Location = new System.Drawing.Point(618, 322);
             this.nextSongButton.Name = "nextSongButton";
             this.nextSongButton.Size = new System.Drawing.Size(75, 23);
             this.nextSongButton.TabIndex = 4;
@@ -98,23 +104,13 @@ namespace PelliP3
             // 
             // pSongButton
             // 
-            this.pSongButton.Location = new System.Drawing.Point(563, 373);
+            this.pSongButton.Location = new System.Drawing.Point(537, 322);
             this.pSongButton.Name = "pSongButton";
             this.pSongButton.Size = new System.Drawing.Size(75, 23);
             this.pSongButton.TabIndex = 5;
             this.pSongButton.Text = "|>";
             this.pSongButton.UseVisualStyleBackColor = true;
             this.pSongButton.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // loadButton
-            // 
-            this.loadButton.Location = new System.Drawing.Point(12, 12);
-            this.loadButton.Name = "loadButton";
-            this.loadButton.Size = new System.Drawing.Size(27, 23);
-            this.loadButton.TabIndex = 6;
-            this.loadButton.Text = "+";
-            this.loadButton.UseVisualStyleBackColor = true;
-            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
             // 
             // songOpenFileDialog
             // 
@@ -129,7 +125,7 @@ namespace PelliP3
             // 
             // songProgressBar
             // 
-            this.songProgressBar.Location = new System.Drawing.Point(504, 335);
+            this.songProgressBar.Location = new System.Drawing.Point(478, 284);
             this.songProgressBar.Name = "songProgressBar";
             this.songProgressBar.Size = new System.Drawing.Size(200, 10);
             this.songProgressBar.TabIndex = 7;
@@ -138,7 +134,7 @@ namespace PelliP3
             // 
             this.songQueuePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.songQueuePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.songQueuePanel.Location = new System.Drawing.Point(38, 78);
+            this.songQueuePanel.Location = new System.Drawing.Point(12, 27);
             this.songQueuePanel.Name = "songQueuePanel";
             this.songQueuePanel.Size = new System.Drawing.Size(416, 318);
             this.songQueuePanel.TabIndex = 8;
@@ -146,17 +142,64 @@ namespace PelliP3
             // currentTimeLabel
             // 
             this.currentTimeLabel.AutoSize = true;
-            this.currentTimeLabel.Location = new System.Drawing.Point(580, 352);
+            this.currentTimeLabel.Location = new System.Drawing.Point(554, 301);
             this.currentTimeLabel.Name = "currentTimeLabel";
             this.currentTimeLabel.Size = new System.Drawing.Size(49, 13);
             this.currentTimeLabel.TabIndex = 9;
             this.currentTimeLabel.Text = "00:00:00";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.playlistToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(718, 24);
+            this.menuStrip1.TabIndex = 10;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importToolStripMenuItem,
+            this.editMetadataToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // playlistToolStripMenuItem
+            // 
+            this.playlistToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItem});
+            this.playlistToolStripMenuItem.Name = "playlistToolStripMenuItem";
+            this.playlistToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.playlistToolStripMenuItem.Text = "Playlist";
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Text = "Import";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.loadButton_Click);
+            // 
+            // editMetadataToolStripMenuItem
+            // 
+            this.editMetadataToolStripMenuItem.Name = "editMetadataToolStripMenuItem";
+            this.editMetadataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editMetadataToolStripMenuItem.Text = "Edit Metadata";
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(718, 373);
             this.Controls.Add(this.currentTimeLabel);
             this.Controls.Add(this.songQueuePanel);
             this.Controls.Add(this.songProgressBar);
@@ -166,11 +209,14 @@ namespace PelliP3
             this.Controls.Add(this.prevSongButton);
             this.Controls.Add(this.nextSongButton);
             this.Controls.Add(this.pSongButton);
-            this.Controls.Add(this.loadButton);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "mainWindow";
             this.Text = "PelliP3";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,12 +230,17 @@ namespace PelliP3
         private System.Windows.Forms.Button prevSongButton;
         private System.Windows.Forms.Button nextSongButton;
         private System.Windows.Forms.Button pSongButton;
-        private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.OpenFileDialog songOpenFileDialog;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ProgressBar songProgressBar;
         private System.Windows.Forms.Panel songQueuePanel;
         private System.Windows.Forms.Label currentTimeLabel;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editMetadataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playlistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
     }
 }
 
