@@ -220,6 +220,7 @@ namespace PelliP3
         public mainWindow()
         {
             InitializeComponent();
+            songQueuePanel.AutoScroll = true;
             progressTimer = new Timer { Interval = 1000 };
             progressTimer.Tick += (s, e) => progressBarChange();
         }
