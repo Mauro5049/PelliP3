@@ -16,7 +16,7 @@ namespace PelliP3
     {
         private void checkEmpty()
         {
-            if (Properties.Settings.Default.folderScan == String.Empty)
+            if (Properties.Settings.Default.folderScan == String.Empty || !Directory.Exists(Properties.Settings.Default.folderScan))
             {
                 MusicSelection newWindow = new MusicSelection();
                 newWindow.Show();
@@ -38,6 +38,14 @@ namespace PelliP3
             Properties.Settings.Default.folderScan = textBox1.Text;
             Properties.Settings.Default.Save();
             this.Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textBox1.Text = folderBrowserDialog1.SelectedPath;
+            }
         }
     }
 }

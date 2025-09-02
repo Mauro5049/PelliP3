@@ -158,8 +158,6 @@ namespace PelliP3
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Properties.Settings.Default.folderScan = "";
-            Properties.Settings.Default.Save();
             if (Properties.Settings.Default.folderScan == String.Empty)
             {
                 musicSelection.Show();
