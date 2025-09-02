@@ -15,14 +15,20 @@ namespace PelliP3
 {
     public partial class mainWindow : Form
     {
-        private readonly MusicPlayer musicPlayer = new MusicPlayer();
         private readonly List<SongUtils.Song> songQueue = new List<SongUtils.Song>(256);
-        private string defaultArtistName = string.Empty;
+        private readonly MusicPlayer musicPlayer = new MusicPlayer();
+
+        private Metadata metadata = new Metadata();
+        private MusicSelection musicSelection = new MusicSelection();
+
+        private Panel selectedSongPanel = null;
+
+        private SongUtils.Song selectedSong;
+
         private string defaultAlbumName = string.Empty;
+        private string defaultArtistName = string.Empty;
+
         private Timer progressTimer;
-        SongUtils.Song selectedSong;
-        Metadata metadata = new Metadata();
-        MusicSelection musicSelection = new MusicSelection();
 
         private void addToSongQueue(SongUtils.Song song)
         {
@@ -34,7 +40,17 @@ namespace PelliP3
 
         private void changeSelectedSong(SongUtils.Song song, Panel panel)
         {
+            if (song == null || panel == null) return;
+
+            if (selectedSongPanel != null && selectedSongPanel != panel)
+            {
+                selectedSongPanel.BackColor = Color.Silver;
+            }
+
             panel.BackColor = Color.FromName("GradientActiveCaption");
+
+            selectedSong = song;
+            selectedSongPanel = panel;
         }
 
         private Panel CreateSongQueueEntry(SongUtils.Song song)
@@ -44,7 +60,7 @@ namespace PelliP3
                 BackColor = Color.Silver,
                 BorderStyle = BorderStyle.FixedSingle,
                 Size = new Size(391, 27),
-                Tag = song,
+                Tag = song
             };
 
             songEntry.DoubleClick += (sender, e) => changeUISong(song);
@@ -88,7 +104,7 @@ namespace PelliP3
             musicPlayer.changeSong(song);
             displaySongInformation(song);
             pSongButton.Text = "|>";
-            progressTimer.Stop();
+            progressTimer?.Stop();
             songProgressBar.Value = 0;
         }
 
@@ -98,6 +114,7 @@ namespace PelliP3
             {
                 return img;
             }
+
             if (obj is byte[] bytes && bytes.Length > 0)
             {
                 using (var ms = new System.IO.MemoryStream(bytes))
@@ -105,26 +122,77 @@ namespace PelliP3
                     return Image.FromStream(ms);
                 }
             }
+
             throw new InvalidCastException("Object cannot be converted to Image.");
         }
 
         private SongUtils.Song loadSongInformation(string songName)
         {
             if (string.IsNullOrEmpty(songName)) return null;
+
             var song = new SongUtils.Song();
-            using (var tfile = TagLib.File.Create(songName))
+
+            try
             {
-                song.Band = tfile.Tag.FirstPerformer ?? defaultArtistName;
-                song.Name = tfile.Tag.Title ?? tfile.Name ?? string.Empty;
-                song.Album = tfile.Tag.Album ?? defaultAlbumName;
-                song.Path = songName;
-                song.Duration = tfile.Properties?.Duration ?? TimeSpan.Zero;
-                if (tfile.Tag.Pictures != null && tfile.Tag.Pictures.Length > 0)
+                using (var tfile = TagLib.File.Create(songName))
                 {
-                    song.Cover = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
+                    song.Band = tfile.Tag.FirstPerformer ?? defaultArtistName;
+                    song.Name = tfile.Tag.Title ?? tfile.Name ?? string.Empty;
+                    song.Album = tfile.Tag.Album ?? defaultAlbumName;
+                    song.Path = songName;
+                    song.Duration = tfile.Properties?.Duration ?? TimeSpan.Zero;
+
+                    if (tfile.Tag.Pictures != null && tfile.Tag.Pictures.Length > 0)
+                    {
+                        song.Cover = ConvertObjectToImage(tfile.Tag.Pictures[0].Data.Data);
+                    }
                 }
             }
+            catch (Exception)
+            {
+                return null;
+            }
+
             return song;
+        }
+
+        private void loadAllSongsFromFolder()
+        {
+            var folderPath = Properties.Settings.Default.folderScan;
+            if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath)) return;
+
+            var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ".mp3",
+                ".wav",
+                ".flac",
+                ".ogg",
+                ".aac",
+                ".wma",
+                ".m4a"
+            };
+
+            try
+            {
+                var files = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
+                                     .Where(f => extensions.Contains(Path.GetExtension(f)));
+
+                foreach (var file in files)
+                {
+                    var song = loadSongInformation(file);
+                    if (song != null)
+                    {
+                        addToSongQueue(song);
+                    }
+                }
+
+                refreshSongPlaylist();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error while loading songs: " + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void displaySongInformation(SongUtils.Song song)
@@ -138,7 +206,7 @@ namespace PelliP3
         private void refreshSongPlaylist()
         {
             songQueuePanel.Controls.Clear();
-            int yOffset = 14;
+            var yOffset = 14;
             foreach (var s in songQueue)
             {
                 if (s == null) continue;
@@ -158,9 +226,13 @@ namespace PelliP3
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.folderScan == String.Empty)
+            if (string.IsNullOrEmpty(Properties.Settings.Default.folderScan))
             {
                 musicSelection.Show();
+            }
+            else
+            {
+                loadAllSongsFromFolder();
             }
         }
 
@@ -181,16 +253,18 @@ namespace PelliP3
             var source = musicPlayer.getSource();
             if (source == null) return;
 
-            double secs = source.Position / source.WaveFormat.SampleRate;
-            double maxSecs = source.Length / source.WaveFormat.SampleRate;
+            var secs = source.Position / (double)source.WaveFormat.SampleRate;
+            var maxSecs = source.Length / (double)source.WaveFormat.SampleRate;
+            if (maxSecs <= 0) return;
 
-            int progress = (int)((secs / maxSecs) * 100);
-            songProgressBar.Value = Math.Min(progress, 100);
+            var progress = (int)((secs / maxSecs) * 100);
+            songProgressBar.Value = Math.Min(Math.Max(progress, 0), 100);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             if (musicPlayer.getSource() == null) return;
+
             if (musicPlayer.isMusicPlaying())
             {
                 pSongButton.Text = "|>";
