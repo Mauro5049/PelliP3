@@ -28,24 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.songCoverEditor = new System.Windows.Forms.PictureBox();
             this.songNameEdit = new System.Windows.Forms.TextBox();
             this.artistNameEdit = new System.Windows.Forms.TextBox();
             this.saveButton = new System.Windows.Forms.Button();
             this.yearAlbumEdit = new System.Windows.Forms.MaskedTextBox();
+            this.songCoverEditor = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverEditor)).BeginInit();
             this.SuspendLayout();
-            // 
-            // songCoverEditor
-            // 
-            this.songCoverEditor.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
-            this.songCoverEditor.InitialImage = null;
-            this.songCoverEditor.Location = new System.Drawing.Point(90, 12);
-            this.songCoverEditor.Name = "songCoverEditor";
-            this.songCoverEditor.Size = new System.Drawing.Size(200, 200);
-            this.songCoverEditor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.songCoverEditor.TabIndex = 1;
-            this.songCoverEditor.TabStop = false;
             // 
             // songNameEdit
             // 
@@ -83,6 +72,17 @@
             this.yearAlbumEdit.TabIndex = 5;
             this.yearAlbumEdit.ValidatingType = typeof(System.DateTime);
             // 
+            // songCoverEditor
+            // 
+            this.songCoverEditor.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
+            this.songCoverEditor.InitialImage = null;
+            this.songCoverEditor.Location = new System.Drawing.Point(90, 12);
+            this.songCoverEditor.Name = "songCoverEditor";
+            this.songCoverEditor.Size = new System.Drawing.Size(200, 200);
+            this.songCoverEditor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.songCoverEditor.TabIndex = 1;
+            this.songCoverEditor.TabStop = false;
+            // 
             // Metadata
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -93,8 +93,10 @@
             this.Controls.Add(this.artistNameEdit);
             this.Controls.Add(this.songNameEdit);
             this.Controls.Add(this.songCoverEditor);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Metadata";
             this.Text = "Metadata Editor";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.Metadata_Load);
             ((System.ComponentModel.ISupportInitialize)(this.songCoverEditor)).EndInit();
             this.ResumeLayout(false);

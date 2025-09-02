@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using PelliP3.Properties;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -19,7 +21,8 @@ namespace PelliP3
         private string defaultAlbumName = string.Empty;
         private Timer progressTimer;
         SongUtils.Song selectedSong;
-        Metadata metadata;
+        Metadata metadata = new Metadata();
+        MusicSelection musicSelection = new MusicSelection();
 
         private void addToSongQueue(SongUtils.Song song)
         {
@@ -32,7 +35,6 @@ namespace PelliP3
         private void changeSelectedSong(SongUtils.Song song, Panel panel)
         {
             panel.BackColor = Color.FromName("GradientActiveCaption");
-            
         }
 
         private Panel CreateSongQueueEntry(SongUtils.Song song)
@@ -156,7 +158,12 @@ namespace PelliP3
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            metadata = new Metadata();
+            Properties.Settings.Default.folderScan = "";
+            Properties.Settings.Default.Save();
+            if (Properties.Settings.Default.folderScan == String.Empty)
+            {
+                musicSelection.Show();
+            }
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
