@@ -167,7 +167,7 @@
     <EmbeddedResource Include="Resources\defaultAlbumCover.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-folder-24.png" />
+    <None Include="Resources\folderImage.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
