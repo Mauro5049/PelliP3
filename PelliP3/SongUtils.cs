@@ -1,23 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PelliP3
 {
-    public class SongUtils
+    public static class SongUtils
     {
-        public class Song
+        public class Song : IEquatable<Song>
         {
-            public string Name { get; set; }
-            public string Album { get; set; }
-            public string Band { get; set; }
+            private string _name;
+            private string _album;
+            private string _band;
+
+            public string Name
+            {
+                get => _name ?? string.Empty;
+                set => _name = value;
+            }
+
+            public string Album
+            {
+                get => _album ?? string.Empty;
+                set => _album = value;
+            }
+
+            public string Band
+            {
+                get => _band ?? string.Empty;
+                set => _band = value;
+            }
+
             public TimeSpan Duration { get; set; }
             public Image Cover { get; set; }
             public string Path { get; set; }
+
+            public bool Equals(Song other)
+            {
+                if (other == null) return false;
+                return string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return Equals(obj as Song);
+            }
+
+            public override int GetHashCode()
+            {
+                return Path?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0;
+            }
         }
     }
 }

@@ -1,52 +1,94 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CSCore;
 using CSCore.Codecs;
 using CSCore.SoundOut;
 
 namespace PelliP3
 {
-    public class MusicPlayer
+    public class MusicPlayer : IDisposable
     {
-        bool isPlaying = false;
-        IWaveSource source;
-        WasapiOut soundOut = new WasapiOut();
-        long songPosition = 0;
-        public bool isMusicPlaying()
-        {
-            return isPlaying;
-        }
-        public IWaveSource getSource()
-        {
-            return source;
-        }
+        private readonly WasapiOut soundOut = new WasapiOut();
+        private IWaveSource source;
+        private long songPosition;
+        private bool isPlaying;
+        private bool isInitialized;
+
+        public bool isMusicPlaying() => isPlaying;
+
+        public IWaveSource getSource() => source;
+
         public void changeSong(SongUtils.Song song)
         {
-            if (isMusicPlaying())
+            if (song?.Path == null) return;
+
+            if (isPlaying)
             {
-                soundOut.Stop();
-                source.Dispose();
-                songPosition = 0;
+                stopPlaying();
             }
-            source = CodecFactory.Instance.GetCodec(song.Path);
+
+            source?.Dispose();
+            songPosition = 0;
+            isInitialized = false;
+
+            try
+            {
+                source = CodecFactory.Instance.GetCodec(song.Path);
+            }
+            catch
+            {
+                source = null;
+            }
         }
+
         public void startPlaying()
         {
             if (source == null) return;
-            isPlaying = true;
-            source.Position = songPosition;
-            soundOut.Initialize(source);
-            soundOut.Play();
+
+            try
+            {
+                source.Position = songPosition;
+
+                if (!isInitialized)
+                {
+                    soundOut.Initialize(source);
+                    isInitialized = true;
+                }
+
+                soundOut.Play();
+                isPlaying = true;
+            }
+            catch
+            {
+                isPlaying = false;
+                isInitialized = false;
+            }
         }
+
         public void stopPlaying()
         {
-            isPlaying = false;
-            songPosition = source.Position;
-            soundOut.Stop();
+            if (!isPlaying) return;
+
+            try
+            {
+                if (source != null)
+                {
+                    songPosition = source.Position;
+                }
+
+                soundOut.Stop();
+                isPlaying = false;
+            }
+            catch
+            {
+                isPlaying = false;
+            }
+        }
+
+        public void Dispose()
+        {
+            stopPlaying();
+            source?.Dispose();
+            soundOut?.Dispose();
         }
     }
 }
