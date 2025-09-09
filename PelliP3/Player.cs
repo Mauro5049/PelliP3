@@ -162,7 +162,8 @@ namespace PelliP3
                         Album = tfile.Tag.Album ?? DefaultAlbumName,
                         Path = songPath,
                         Duration = tfile.Properties?.Duration ?? TimeSpan.Zero,
-                        Year = tfile.Tag.Year
+                        Year = tfile.Tag.Year,
+                        File = tfile
                     };
 
                     if (tfile.Tag.Pictures?.Length > 0)
@@ -170,7 +171,6 @@ namespace PelliP3
                         var pictureData = tfile.Tag.Pictures[0].Data?.Data;
                         song.Cover = ConvertBytesToImage(pictureData);
                     }
-                  //  Debug.Write(typeof(tfile)); ay scoob fix dis
                     return song;
                 }
             }

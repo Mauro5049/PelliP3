@@ -21,14 +21,16 @@ namespace PelliP3
 
         private void saveMetadata(string name, Image image, string artistName, uint year)
         {
-            song.Name = name;
+            song.File.Tag.Title = name;
             if (image != Properties.Resources.defaultAlbumCover)
                 song.Cover = image;
             if (artistName != String.Empty)
-                song.Band = artistName;
+                if (song.File.Tag.Performers.Length > 0) song.File.Tag.Performers[0] = artistName;
+                else song.File.Tag.Performers = new[] { artistName };
             if (year != null)
-                song.Year = year;
-            
+                song.File.Tag.Year = year;
+            song.File.Save();
+            MessageBox.Show("Saved!");
         }
 
         private void Metadata_Load(object sender, EventArgs e)

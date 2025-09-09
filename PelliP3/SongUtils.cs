@@ -33,6 +33,8 @@ namespace PelliP3
             public Image Cover { get; set; }
             public string Path { get; set; }
             public uint Year { get; set; }
+            
+            public TagLib.File File { get; set; }
 
             public bool Equals(Song other)
             {
