@@ -32,6 +32,7 @@ namespace PelliP3
             public TimeSpan Duration { get; set; }
             public Image Cover { get; set; }
             public string Path { get; set; }
+            public uint Year { get; set; }
 
             public bool Equals(Song other)
             {

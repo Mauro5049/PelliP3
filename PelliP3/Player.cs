@@ -22,7 +22,6 @@ namespace PelliP3
             ".mp3", ".wav", ".flac", ".ogg", ".aac", ".wma", ".m4a"
         };
 
-        private Metadata metadata = new Metadata();
         private MusicSelection musicSelection = new MusicSelection();
         private Panel selectedSongPanel = null;
         private Song selectedSong;
@@ -121,6 +120,7 @@ namespace PelliP3
                 AutoSize = true
             };
             songEntry.Controls.Add(durationLabel);
+            songEntry.ContextMenuStrip = contextMenuStrip1;
 
             return songEntry;
         }
@@ -161,7 +161,8 @@ namespace PelliP3
                         Name = tfile.Tag.Title ?? Path.GetFileNameWithoutExtension(songPath),
                         Album = tfile.Tag.Album ?? DefaultAlbumName,
                         Path = songPath,
-                        Duration = tfile.Properties?.Duration ?? TimeSpan.Zero
+                        Duration = tfile.Properties?.Duration ?? TimeSpan.Zero,
+                        Year = tfile.Tag.Year
                     };
 
                     if (tfile.Tag.Pictures?.Length > 0)
@@ -169,7 +170,7 @@ namespace PelliP3
                         var pictureData = tfile.Tag.Pictures[0].Data?.Data;
                         song.Cover = ConvertBytesToImage(pictureData);
                     }
-
+                  //  Debug.Write(typeof(tfile)); ay scoob fix dis
                     return song;
                 }
             }
@@ -300,11 +301,21 @@ namespace PelliP3
 
         private void editMetadataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            metadata.ShowDialog();
+          //  metadata.ShowDialog();
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (contextMenuStrip1.SourceControl.Tag is Song)
+            {
+                Metadata metadata = new Metadata();
+                metadata.Tag = contextMenuStrip1.SourceControl.Tag;
+                metadata.Show();
+            }
         }
     }
 }

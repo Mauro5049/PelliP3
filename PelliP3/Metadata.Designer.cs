@@ -62,6 +62,7 @@
             this.saveButton.TabIndex = 4;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // yearAlbumEdit
             // 
@@ -94,6 +95,8 @@
             this.Controls.Add(this.songNameEdit);
             this.Controls.Add(this.songCoverEditor);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Metadata";
             this.Text = "Metadata Editor";
             this.TopMost = true;
