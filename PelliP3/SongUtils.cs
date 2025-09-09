@@ -46,7 +46,7 @@ namespace PelliP3
 
             public override int GetHashCode()
             {
-                return Path?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0;
+                return Path?.GetHashCode() ?? 0;
             }
         }
     }

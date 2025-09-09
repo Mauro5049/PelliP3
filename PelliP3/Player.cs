@@ -134,6 +134,7 @@ namespace PelliP3
             pSongButton.Text = "|>";
             progressTimer.Stop();
             songProgressBar.Value = 0;
+            currentTimeLabel.Text = "00:00:00";
         }
 
         private static Image ConvertBytesToImage(byte[] bytes)
