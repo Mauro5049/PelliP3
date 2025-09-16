@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace PelliP3
     public partial class Metadata : Form
     {
         SongUtils.Song song;
+
+        public MusicPlayer player;
+
         public Metadata()
         {
             InitializeComponent();
@@ -23,7 +27,7 @@ namespace PelliP3
         {
             song.File.Tag.Title = name;
             if (image != Properties.Resources.defaultAlbumCover)
-                song.Cover = image;
+                song.File.Tag.Pictures = new TagLib.IPicture[] { WindowUtils.ConvertImageToTagLibPicture(image) };
             if (artistName != String.Empty)
                 if (song.File.Tag.Performers.Length > 0) song.File.Tag.Performers[0] = artistName;
                 else song.File.Tag.Performers = new[] { artistName };
@@ -48,10 +52,19 @@ namespace PelliP3
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if (songNameEdit.Text != String.Empty)
+            if (songNameEdit.Text != String.Empty && player != null)
             {
+                player.Dispose();
                 saveMetadata(songNameEdit.Text, songCoverEditor.Image, artistNameEdit.Text, uint.Parse(yearAlbumEdit.Text));
             }
+        }
+
+        private void songCoverEditor_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() != DialogResult.OK) return;
+            Image newCover = Image.FromFile(openFileDialog1.FileName);
+            if (newCover == null) return;
+            songCoverEditor.Image = newCover;
         }
     }
 }

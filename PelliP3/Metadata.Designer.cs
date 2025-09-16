@@ -33,6 +33,7 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.yearAlbumEdit = new System.Windows.Forms.MaskedTextBox();
             this.songCoverEditor = new System.Windows.Forms.PictureBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverEditor)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,6 +76,7 @@
             // 
             // songCoverEditor
             // 
+            this.songCoverEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.songCoverEditor.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
             this.songCoverEditor.InitialImage = null;
             this.songCoverEditor.Location = new System.Drawing.Point(90, 12);
@@ -83,6 +85,11 @@
             this.songCoverEditor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.songCoverEditor.TabIndex = 1;
             this.songCoverEditor.TabStop = false;
+            this.songCoverEditor.Click += new System.EventHandler(this.songCoverEditor_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "\".png\"|*.png|\"Pênis\"|.jpg";
             // 
             // Metadata
             // 
@@ -114,5 +121,6 @@
         private System.Windows.Forms.TextBox artistNameEdit;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.MaskedTextBox yearAlbumEdit;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

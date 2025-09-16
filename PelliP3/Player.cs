@@ -137,16 +137,6 @@ namespace PelliP3
             currentTimeLabel.Text = "00:00:00";
         }
 
-        private static Image ConvertBytesToImage(byte[] bytes)
-        {
-            if (bytes == null || bytes.Length == 0) return null;
-
-            using (var ms = new MemoryStream(bytes))
-            {
-                return Image.FromStream(ms);
-            }
-        }
-
         private Song loadSongInformation(string songPath)
         {
             if (string.IsNullOrEmpty(songPath)) return null;
@@ -169,7 +159,7 @@ namespace PelliP3
                     if (tfile.Tag.Pictures?.Length > 0)
                     {
                         var pictureData = tfile.Tag.Pictures[0].Data?.Data;
-                        song.Cover = ConvertBytesToImage(pictureData);
+                        song.Cover = WindowUtils.ConvertBytesToImage(pictureData);
                     }
                     return song;
                 }
@@ -299,22 +289,15 @@ namespace PelliP3
             }
         }
 
-        private void editMetadataToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-          //  metadata.ShowDialog();
-        }
-
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-        }
-
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (contextMenuStrip1.SourceControl.Tag is Song)
             {
                 Metadata metadata = new Metadata();
+                metadata.player = musicPlayer;
                 metadata.Tag = contextMenuStrip1.SourceControl.Tag;
                 metadata.Show();
+                metadata.FormClosed += (s, ev) => loadAllSongsFromFolder();
             }
         }
     }
