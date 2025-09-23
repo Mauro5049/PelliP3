@@ -172,6 +172,9 @@ namespace PelliP3
 
         private void loadAllSongsFromFolder()
         {
+            songQueue.Clear();
+            loadedPaths.Clear();
+
             var folderPath = Properties.Settings.Default.folderScan;
             if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath)) return;
 
