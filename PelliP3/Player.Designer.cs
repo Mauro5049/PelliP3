@@ -136,12 +136,12 @@ namespace PelliP3
             // 
             // currentTimeLabel
             // 
-            this.currentTimeLabel.AutoSize = true;
-            this.currentTimeLabel.Location = new System.Drawing.Point(554, 301);
+            this.currentTimeLabel.Location = new System.Drawing.Point(478, 301);
             this.currentTimeLabel.Name = "currentTimeLabel";
-            this.currentTimeLabel.Size = new System.Drawing.Size(49, 13);
+            this.currentTimeLabel.Size = new System.Drawing.Size(200, 13);
             this.currentTimeLabel.TabIndex = 9;
             this.currentTimeLabel.Text = "00:00:00";
+            this.currentTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // menuStrip1
             // 
