@@ -21,8 +21,6 @@ namespace PelliP3
         {
             ".mp3", ".wav", ".flac", ".ogg", ".aac", ".wma", ".m4a"
         };
-
-        private MusicSelection musicSelection = new MusicSelection();
         private Panel selectedSongPanel = null;
         private Song selectedSong;
 
@@ -42,6 +40,7 @@ namespace PelliP3
             var folderPath = Properties.Settings.Default.folderScan;
             if (string.IsNullOrEmpty(folderPath))
             {
+                MusicSelection musicSelection = new MusicSelection();
                 musicSelection.Show();
             }
             else
@@ -49,7 +48,7 @@ namespace PelliP3
                 loadAllSongsFromFolder();
             }
         }
-
+        
         private bool addToSongQueue(Song song)
         {
             if (song?.Path == null || songQueue.Count >= 256) return false;
@@ -84,12 +83,6 @@ namespace PelliP3
                 Tag = song
             };
 
-            EventHandler clickHandler = (s, e) =>
-            {
-                changeUISong(song);
-                changeSelectedSong(song, songEntry);
-            };
-
             songEntry.DoubleClick += (s, e) => changeUISong(song);
             songEntry.Click += (s, e) => changeSelectedSong(song, songEntry);
 
@@ -100,7 +93,8 @@ namespace PelliP3
                 Size = new Size(27, 27),
                 SizeMode = PictureBoxSizeMode.StretchImage
             };
-            cover.Click += clickHandler;
+            cover.DoubleClick += (s, e) => changeUISong(song);
+            cover.Click += (s, e) => changeSelectedSong(song, songEntry);
             songEntry.Controls.Add(cover);
 
             var nameLabel = new Label
@@ -110,7 +104,8 @@ namespace PelliP3
                 AutoSize = true,
                 MaximumSize = new Size(290, 13)
             };
-            nameLabel.Click += clickHandler;
+            nameLabel.DoubleClick += (s, e) => changeUISong(song);
+            nameLabel.Click += (s, e) => changeSelectedSong(song, songEntry);
             songEntry.Controls.Add(nameLabel);
 
             var durationLabel = new Label
@@ -183,6 +178,7 @@ namespace PelliP3
                 var files = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
                                      .Where(f => supportedExtensions.Contains(Path.GetExtension(f)));
 
+                songQueuePanel.AutoScrollPosition = new Point(0, 0);
                 songQueuePanel.SuspendLayout();
 
                 foreach (var file in files)
@@ -302,6 +298,13 @@ namespace PelliP3
                 metadata.Show();
                 metadata.FormClosed += (s, ev) => loadAllSongsFromFolder();
             }
+        }
+
+        private void diToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MusicSelection musicSelection = new MusicSelection();
+            musicSelection.Show();
+            musicSelection.Closing += (s, ev) => loadAllSongsFromFolder();
         }
     }
 }

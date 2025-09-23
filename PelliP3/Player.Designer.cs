@@ -43,6 +43,7 @@ namespace PelliP3
             this.currentTimeLabel = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playlistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.songCoverPlayer = new System.Windows.Forms.PictureBox();
@@ -56,23 +57,25 @@ namespace PelliP3
             // 
             // songTitlePlayer
             // 
-            this.songTitlePlayer.AutoSize = true;
+            this.songTitlePlayer.AutoEllipsis = true;
             this.songTitlePlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.songTitlePlayer.Location = new System.Drawing.Point(542, 230);
+            this.songTitlePlayer.Location = new System.Drawing.Point(478, 230);
             this.songTitlePlayer.Name = "songTitlePlayer";
-            this.songTitlePlayer.Size = new System.Drawing.Size(66, 31);
+            this.songTitlePlayer.Size = new System.Drawing.Size(200, 31);
             this.songTitlePlayer.TabIndex = 1;
             this.songTitlePlayer.Text = "Title";
+            this.songTitlePlayer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // songArtistPlayer
             // 
-            this.songArtistPlayer.AutoSize = true;
+            this.songArtistPlayer.AutoEllipsis = true;
             this.songArtistPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.songArtistPlayer.Location = new System.Drawing.Point(554, 261);
+            this.songArtistPlayer.Location = new System.Drawing.Point(478, 261);
             this.songArtistPlayer.Name = "songArtistPlayer";
-            this.songArtistPlayer.Size = new System.Drawing.Size(40, 17);
+            this.songArtistPlayer.Size = new System.Drawing.Size(200, 17);
             this.songArtistPlayer.TabIndex = 2;
             this.songArtistPlayer.Text = "Artist";
+            this.songArtistPlayer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // prevSongButton
             // 
@@ -153,9 +156,19 @@ namespace PelliP3
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.diToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // diToolStripMenuItem
+            // 
+            this.diToolStripMenuItem.Image = global::PelliP3.Properties.Resources.icons8_folder_24;
+            this.diToolStripMenuItem.Name = "diToolStripMenuItem";
+            this.diToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.diToolStripMenuItem.Text = "Directory";
+            this.diToolStripMenuItem.Click += new System.EventHandler(this.diToolStripMenuItem_Click);
             // 
             // playlistToolStripMenuItem
             // 
@@ -188,19 +201,19 @@ namespace PelliP3
             this.editToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(118, 48);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.editToolStripMenuItem.Text = "Edit";
-            this.editToolStripMenuItem.Click += new System.EventHandler(editToolStripMenuItem_Click);
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             // 
             // mainWindow
@@ -254,6 +267,7 @@ namespace PelliP3
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem diToolStripMenuItem;
     }
 }
 

@@ -13,11 +13,6 @@ namespace PelliP3
 {
     public class WindowUtils
     {
-        public static void drawTextCentered(Label text, Size ClientSize)
-        {
-            Size textSize = TextRenderer.MeasureText(text.Text, text.Font);
-            text.Location = new Point((ClientSize.Width - textSize.Width), text.Location.Y);
-        }
         public static TagLib.IPicture ConvertImageToTagLibPicture(System.Drawing.Image image)
         {
             using (MemoryStream memoryStream = new MemoryStream())
