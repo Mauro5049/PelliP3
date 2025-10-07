@@ -34,6 +34,7 @@
             this.yearAlbumEdit = new System.Windows.Forms.MaskedTextBox();
             this.songCoverEditor = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.retrieveButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverEditor)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,11 +92,22 @@
             // 
             this.openFileDialog1.Filter = "\".png\"|*.png|\"Pênis\"|.jpg";
             // 
+            // retrieveButton
+            // 
+            this.retrieveButton.Location = new System.Drawing.Point(12, 415);
+            this.retrieveButton.Name = "retrieveButton";
+            this.retrieveButton.Size = new System.Drawing.Size(59, 23);
+            this.retrieveButton.TabIndex = 6;
+            this.retrieveButton.Text = "Retrieve";
+            this.retrieveButton.UseVisualStyleBackColor = true;
+            this.retrieveButton.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Metadata
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(390, 450);
+            this.Controls.Add(this.retrieveButton);
             this.Controls.Add(this.yearAlbumEdit);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.artistNameEdit);
@@ -122,5 +134,6 @@
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.MaskedTextBox yearAlbumEdit;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button retrieveButton;
     }
 }

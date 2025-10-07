@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
 using System.Windows.Forms;
+using System.Text.Json;
+using CSCore.SoundIn;
+using System.Xml.Linq;
+using System.Linq;
 
 namespace PelliP3
 {
@@ -65,6 +63,38 @@ namespace PelliP3
             Image newCover = Image.FromFile(openFileDialog1.FileName);
             if (newCover == null) return;
             songCoverEditor.Image = newCover;
+        }
+        public async void RetrieveSongInformation(String name)
+        {
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
+            try
+            {
+                var response = await httpClient.GetAsync($"https://musicbrainz.org/ws/2/recording?query={Uri.EscapeDataString(name)}");
+                response.EnsureSuccessStatusCode();
+                var crazycattle3d = await response.Content.ReadAsStringAsync();
+                var doc = XDocument.Parse(crazycattle3d);
+
+                var ns = (XNamespace)"http://musicbrainz.org/ns/mmd-2.0#";
+
+                // men shaking hands
+              
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.Write(ex.Message);
+                Debug.Write("Its been a hard day's night");
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (songNameEdit == null)
+            {
+                MessageBox.Show("Song name can't be null.");
+                return;
+            }
+            RetrieveSongInformation(songNameEdit.Text);
         }
     }
 }
