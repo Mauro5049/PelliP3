@@ -7,6 +7,9 @@ using System.Text.Json;
 using CSCore.SoundIn;
 using System.Xml.Linq;
 using System.Linq;
+using static PelliP3.SongUtils;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PelliP3
 {
@@ -64,37 +67,130 @@ namespace PelliP3
             if (newCover == null) return;
             songCoverEditor.Image = newCover;
         }
-        public async void RetrieveSongInformation(String name)
+
+        public static async Task<Song[]> RetrieveSongInformation(string songName, string artistName = null)
         {
+            var results = new List<(Song song, int score)>(); // keep score for sorting
+
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
+
             try
             {
-                var response = await httpClient.GetAsync($"https://musicbrainz.org/ws/2/recording?query={Uri.EscapeDataString(name)}");
+                // Build the query URL
+                var baseUrl = "https://musicbrainz.org/ws/2/recording";
+                var query = $"?query={Uri.EscapeDataString(songName)}";
+
+                if (!string.IsNullOrEmpty(artistName))
+                {
+                    query += "&artist=" + Uri.EscapeDataString(artistName);
+                }
+
+                var fullUrl = baseUrl + query;
+                Debug.WriteLine($"Querying: {fullUrl}");
+
+                var response = await httpClient.GetAsync(fullUrl);
                 response.EnsureSuccessStatusCode();
-                var crazycattle3d = await response.Content.ReadAsStringAsync();
-                var doc = XDocument.Parse(crazycattle3d);
 
-                var ns = (XNamespace)"http://musicbrainz.org/ns/mmd-2.0#";
+                var xmlContent = await response.Content.ReadAsStringAsync();
+                var doc = XDocument.Parse(xmlContent);
 
-                // men shaking hands
-              
+                // Get all <recording> elements (ignore namespaces)
+                var recordings = doc.Descendants().Where(e => e.Name.LocalName == "recording");
+
+                foreach (var recording in recordings)
+                {
+                    // Parse score
+                    int score = 0;
+                    var scoreAttr = recording.Attribute("score")?.Value
+                                    ?? recording.Attribute("{http://musicbrainz.org/ns/mmd-2.0#}score")?.Value;
+                    if (!string.IsNullOrEmpty(scoreAttr))
+                        int.TryParse(scoreAttr, out score);
+
+                    if (score < 90)
+                        continue;
+
+                    // Title
+                    var title = recording.Descendants()
+                                         .FirstOrDefault(e => e.Name.LocalName == "title")
+                                         ?.Value ?? "Unknown";
+
+                    // Artist/Band
+                    var band = recording.Descendants()
+                                        .FirstOrDefault(e => e.Name.LocalName == "name-credit")
+                                        ?.Descendants()
+                                        .FirstOrDefault(e => e.Name.LocalName == "name")
+                                        ?.Value ?? "Unknown";
+
+                    // Album
+                    var album = recording.Descendants()
+                                         .FirstOrDefault(e => e.Name.LocalName == "release")
+                                         ?.Descendants()
+                                         .FirstOrDefault(e => e.Name.LocalName == "title")
+                                         ?.Value ?? "Unknown";
+
+                    // Release date
+                    var releaseDate = recording.Descendants()
+                                               .FirstOrDefault(e => e.Name.LocalName == "first-release-date")
+                                               ?.Value;
+
+                    uint year = 0;
+                    if (DateTime.TryParse(releaseDate, out var parsedDate))
+                        year = (uint)parsedDate.Year;
+
+                    // Duration
+                    TimeSpan duration = TimeSpan.Zero;
+                    var lengthAttr = recording.Descendants()
+                                              .FirstOrDefault(e => e.Name.LocalName == "length")
+                                              ?.Value;
+                    if (long.TryParse(lengthAttr, out var lengthMs))
+                        duration = TimeSpan.FromMilliseconds(lengthMs);
+
+                    var song = new Song
+                    {
+                        Name = title,
+                        Band = band,
+                        Album = album,
+                        Year = year,
+                        Duration = duration
+                    };
+
+                    results.Add((song, score));
+                }
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                Debug.Write(ex.Message);
-                Debug.Write("Its been a hard day's night");
+                Debug.WriteLine($"[MusicBrainzAPI] Error: {ex.Message}");
             }
+
+            // Return results ordered by score descending
+            return results.OrderByDescending(r => r.score).Select(r => r.song).ToArray();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private async void button1_Click(object sender, EventArgs e)
         {
             if (songNameEdit == null)
             {
                 MessageBox.Show("Song name can't be null.");
                 return;
             }
-            RetrieveSongInformation(songNameEdit.Text);
+            var weirdFishes = await RetrieveSongInformation(songNameEdit.Text, string.IsNullOrWhiteSpace(artistNameEdit.Text) ? null : artistNameEdit.Text);
+
+            Debug.WriteLine("I love coding more than my wife");
+
+            if (weirdFishes == null || weirdFishes.Length == 0) Debug.Write("you're all I need."); return;
+
+            // TODO: FIx this non-working pile of shit.
+
+            Debug.WriteLine("I wish I had a wife.");
+
+            foreach (var song in weirdFishes)
+            {
+                Debug.WriteLine(song.Name);
+            }
+
+            Debug.WriteLine("Then maybe I'd love her more than coding.");
         }
     }
 }
