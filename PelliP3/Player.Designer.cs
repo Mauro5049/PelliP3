@@ -43,16 +43,17 @@ namespace PelliP3
             this.currentTimeLabel = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.diToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playlistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.songCoverPlayer = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeOrder = new System.Windows.Forms.Button();
+            this.songCoverPlayer = new System.Windows.Forms.PictureBox();
+            this.diToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
             this.SuspendLayout();
             // 
             // songTitlePlayer
@@ -162,14 +163,6 @@ namespace PelliP3
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // diToolStripMenuItem
-            // 
-            this.diToolStripMenuItem.Image = global::PelliP3.Properties.Resources.icons8_folder_24;
-            this.diToolStripMenuItem.Name = "diToolStripMenuItem";
-            this.diToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-            this.diToolStripMenuItem.Text = "Directory";
-            this.diToolStripMenuItem.Click += new System.EventHandler(this.diToolStripMenuItem_Click);
-            // 
             // playlistToolStripMenuItem
             // 
             this.playlistToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -183,17 +176,6 @@ namespace PelliP3
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
-            // 
-            // songCoverPlayer
-            // 
-            this.songCoverPlayer.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
-            this.songCoverPlayer.InitialImage = null;
-            this.songCoverPlayer.Location = new System.Drawing.Point(478, 27);
-            this.songCoverPlayer.Name = "songCoverPlayer";
-            this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
-            this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.songCoverPlayer.TabIndex = 0;
-            this.songCoverPlayer.TabStop = false;
             // 
             // contextMenuStrip1
             // 
@@ -216,11 +198,41 @@ namespace PelliP3
             this.removeToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             // 
+            // changeOrder
+            // 
+            this.changeOrder.Image = global::PelliP3.Properties.Resources.icons8_change_24;
+            this.changeOrder.Location = new System.Drawing.Point(392, 0);
+            this.changeOrder.Name = "changeOrder";
+            this.changeOrder.Size = new System.Drawing.Size(36, 24);
+            this.changeOrder.TabIndex = 0;
+            this.changeOrder.UseVisualStyleBackColor = true;
+            this.changeOrder.Click += new System.EventHandler(this.changeOrder_Click);
+            // 
+            // songCoverPlayer
+            // 
+            this.songCoverPlayer.Image = global::PelliP3.Properties.Resources.defaultAlbumCover;
+            this.songCoverPlayer.InitialImage = null;
+            this.songCoverPlayer.Location = new System.Drawing.Point(478, 27);
+            this.songCoverPlayer.Name = "songCoverPlayer";
+            this.songCoverPlayer.Size = new System.Drawing.Size(200, 200);
+            this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.songCoverPlayer.TabIndex = 0;
+            this.songCoverPlayer.TabStop = false;
+            // 
+            // diToolStripMenuItem
+            // 
+            this.diToolStripMenuItem.Image = global::PelliP3.Properties.Resources.icons8_folder_24;
+            this.diToolStripMenuItem.Name = "diToolStripMenuItem";
+            this.diToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.diToolStripMenuItem.Text = "Directory";
+            this.diToolStripMenuItem.Click += new System.EventHandler(this.diToolStripMenuItem_Click);
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(718, 373);
+            this.Controls.Add(this.changeOrder);
             this.Controls.Add(this.currentTimeLabel);
             this.Controls.Add(this.songQueuePanel);
             this.Controls.Add(this.songProgressBar);
@@ -240,8 +252,8 @@ namespace PelliP3
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -268,6 +280,7 @@ namespace PelliP3
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem diToolStripMenuItem;
+        private System.Windows.Forms.Button changeOrder;
     }
 }
 

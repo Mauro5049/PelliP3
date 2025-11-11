@@ -23,6 +23,8 @@ namespace PelliP3
         };
         private Panel selectedSongPanel = null;
         private Song selectedSong;
+        private String[] orderModes = { "ORDER_ASC", "ORDER_DESC", "ORDER_ALBUM" };
+        private String orderMode = null;
 
         private const string DefaultAlbumName = "Unknown Album";
         private const string DefaultArtistName = "Unknown Artist";
@@ -305,6 +307,22 @@ namespace PelliP3
             MusicSelection musicSelection = new MusicSelection();
             musicSelection.Show();
             musicSelection.Closing += (s, ev) => loadAllSongsFromFolder();
+        }
+
+        private void changeOrder_Click(object sender, EventArgs e)
+            // TODO
+        {   // Onclick:
+            //  if orderModes[orderMode].position + 1 > orderModes[].size:
+            //      orderMode = orderModes[0]
+            //  else:
+            //      orderMode = orderModes[orderModes[orderMode].position + 1]
+
+            // If orderMode = orderModes.ORDER_ASC:
+            //      Re-order songQueue array by alphabetical order
+            // If orderMode = orderModes.ORDER_DESC:
+            //      Re-order songQueue array by reverse alphabetical order
+            // If orderMode = orderModes.ORDER_ALBUM:
+            //      Re-order songQueue array by Album. Songs on the same album are on a chain.
         }
     }
 }
