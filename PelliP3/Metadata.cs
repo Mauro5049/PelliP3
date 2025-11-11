@@ -53,12 +53,20 @@ namespace PelliP3
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if (songNameEdit.Text != String.Empty && player != null)
+            if (songNameEdit.Text != string.Empty && player != null)
             {
                 player.Dispose();
-                saveMetadata(songNameEdit.Text, songCoverEditor.Image, artistNameEdit.Text, uint.Parse(yearAlbumEdit.Text));
+
+                uint parsedYear = 0;
+                if (!uint.TryParse(yearAlbumEdit.Text, out parsedYear))
+                {
+                    parsedYear = 0;
+                }
+
+                saveMetadata(songNameEdit.Text, songCoverEditor.Image, artistNameEdit.Text, parsedYear);
             }
         }
+
 
         private void songCoverEditor_Click(object sender, EventArgs e)
         {
@@ -70,24 +78,23 @@ namespace PelliP3
 
         public static async Task<Song[]> RetrieveSongInformation(string songName, string artistName = null)
         {
-            var results = new List<(Song song, int score)>(); // keep score for sorting
-
+            var results = new List<(Song song, int score)>();
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
 
             try
             {
-                // Build the query URL
-                var baseUrl = "https://musicbrainz.org/ws/2/recording";
-                var query = $"?query={Uri.EscapeDataString(songName)}";
+                // Handle empty or placeholder names
+                if (IsEmpty(songName))
+                    return Array.Empty<Song>();
 
-                if (!string.IsNullOrEmpty(artistName))
-                {
-                    query += "&artist=" + Uri.EscapeDataString(artistName);
-                }
+                string query = $"recording:\"{songName}\"";
 
-                var fullUrl = baseUrl + query;
-                Debug.WriteLine($"Querying: {fullUrl}");
+                if (!IsEmpty(artistName))
+                    query += $" AND artist:\"{artistName}\"";
+
+                var fullUrl = $"https://musicbrainz.org/ws/2/recording?query={Uri.EscapeDataString(query)}&fmt=xml";
+                Debug.WriteLine($"[MusicBrainzAPI] Querying: {fullUrl}");
 
                 var response = await httpClient.GetAsync(fullUrl);
                 response.EnsureSuccessStatusCode();
@@ -95,41 +102,30 @@ namespace PelliP3
                 var xmlContent = await response.Content.ReadAsStringAsync();
                 var doc = XDocument.Parse(xmlContent);
 
-                // Get all <recording> elements (ignore namespaces)
                 var recordings = doc.Descendants().Where(e => e.Name.LocalName == "recording");
 
                 foreach (var recording in recordings)
                 {
-                    // Parse score
                     int score = 0;
                     var scoreAttr = recording.Attribute("score")?.Value
                                     ?? recording.Attribute("{http://musicbrainz.org/ns/mmd-2.0#}score")?.Value;
                     if (!string.IsNullOrEmpty(scoreAttr))
                         int.TryParse(scoreAttr, out score);
 
-                    if (score < 90)
-                        continue;
+                    var title = recording.Elements().FirstOrDefault(e => e.Name.LocalName == "title")?.Value?.Trim() ?? "Unknown Title";
 
-                    // Title
-                    var title = recording.Descendants()
-                                         .FirstOrDefault(e => e.Name.LocalName == "title")
-                                         ?.Value ?? "Unknown";
-
-                    // Artist/Band
                     var band = recording.Descendants()
                                         .FirstOrDefault(e => e.Name.LocalName == "name-credit")
                                         ?.Descendants()
                                         .FirstOrDefault(e => e.Name.LocalName == "name")
-                                        ?.Value ?? "Unknown";
+                                        ?.Value?.Trim() ?? "Unknown Artist";
 
-                    // Album
                     var album = recording.Descendants()
                                          .FirstOrDefault(e => e.Name.LocalName == "release")
                                          ?.Descendants()
                                          .FirstOrDefault(e => e.Name.LocalName == "title")
-                                         ?.Value ?? "Unknown";
+                                         ?.Value?.Trim() ?? "Unknown Album";
 
-                    // Release date
                     var releaseDate = recording.Descendants()
                                                .FirstOrDefault(e => e.Name.LocalName == "first-release-date")
                                                ?.Value;
@@ -138,7 +134,6 @@ namespace PelliP3
                     if (DateTime.TryParse(releaseDate, out var parsedDate))
                         year = (uint)parsedDate.Year;
 
-                    // Duration
                     TimeSpan duration = TimeSpan.Zero;
                     var lengthAttr = recording.Descendants()
                                               .FirstOrDefault(e => e.Name.LocalName == "length")
@@ -146,16 +141,14 @@ namespace PelliP3
                     if (long.TryParse(lengthAttr, out var lengthMs))
                         duration = TimeSpan.FromMilliseconds(lengthMs);
 
-                    var song = new Song
+                    results.Add((new Song
                     {
                         Name = title,
                         Band = band,
                         Album = album,
                         Year = year,
                         Duration = duration
-                    };
-
-                    results.Add((song, score));
+                    }, score));
                 }
             }
             catch (Exception ex)
@@ -163,34 +156,66 @@ namespace PelliP3
                 Debug.WriteLine($"[MusicBrainzAPI] Error: {ex.Message}");
             }
 
-            // Return results ordered by score descending
             return results.OrderByDescending(r => r.score).Select(r => r.song).ToArray();
+        }
+
+        private static bool IsEmpty(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return true;
+
+            value = value.Trim();
+
+            return value.Equals("Unknown", StringComparison.OrdinalIgnoreCase)
+                || value.Equals("Unknown Title", StringComparison.OrdinalIgnoreCase)
+                || value.Equals("Unknown Artist", StringComparison.OrdinalIgnoreCase)
+                || value.Equals("Unknown Album", StringComparison.OrdinalIgnoreCase);
         }
 
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            if (songNameEdit == null)
+            if (IsEmpty(songNameEdit.Text))
             {
-                MessageBox.Show("Song name can't be null.");
+                MessageBox.Show("Please enter a valid song title.");
                 return;
             }
-            var weirdFishes = await RetrieveSongInformation(songNameEdit.Text, string.IsNullOrWhiteSpace(artistNameEdit.Text) ? null : artistNameEdit.Text);
 
-            Debug.WriteLine("I love coding more than my wife");
+            var query = await RetrieveSongInformation(songNameEdit.Text, artistNameEdit.Text);
 
-            if (weirdFishes == null || weirdFishes.Length == 0) Debug.Write("you're all I need."); return;
-
-            // TODO: FIx this non-working pile of shit.
-
-            Debug.WriteLine("I wish I had a wife.");
-
-            foreach (var song in weirdFishes)
+            if (query == null || query.Length == 0)
             {
-                Debug.WriteLine(song.Name);
+                MessageBox.Show("No matching songs found.");
+                return;
             }
 
-            Debug.WriteLine("Then maybe I'd love her more than coding.");
+            var resultForm = new SongQueryResult(query);
+            if (resultForm.ShowDialog(this) == DialogResult.OK && resultForm.SelectedSong != null)
+            {
+                var selected = resultForm.SelectedSong;
+
+                song.Name = selected.Name;
+                song.Band = selected.Band;
+                song.Album = selected.Album;
+                song.Year = selected.Year;
+                song.Duration = selected.Duration;
+
+                songNameEdit.Text = song.Name;
+                artistNameEdit.Text = song.Band;
+                yearAlbumEdit.Text = song.Year > 0 ? song.Year.ToString() : "";
+
+                // Retrieve cover separately
+                var cover = await ArtworkUtils.RetrieveAlbumCoverAsync(selected.Name, selected.Band);
+                if (cover != null)
+                    songCoverEditor.Image = cover;
+                else
+                    Debug.WriteLine("[ArtworkAPI] No cover found.");
+
+                MessageBox.Show("Metadata updated from MusicBrainz.");
+            }
+
         }
+
+
     }
 }

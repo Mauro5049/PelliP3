@@ -201,10 +201,12 @@ namespace PelliP3
             // changeOrder
             // 
             this.changeOrder.Image = global::PelliP3.Properties.Resources.icons8_change_24;
-            this.changeOrder.Location = new System.Drawing.Point(392, 0);
+            this.changeOrder.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.changeOrder.Location = new System.Drawing.Point(349, 0);
             this.changeOrder.Name = "changeOrder";
-            this.changeOrder.Size = new System.Drawing.Size(36, 24);
+            this.changeOrder.Size = new System.Drawing.Size(79, 24);
             this.changeOrder.TabIndex = 0;
+            this.changeOrder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.changeOrder.UseVisualStyleBackColor = true;
             this.changeOrder.Click += new System.EventHandler(this.changeOrder_Click);
             // 

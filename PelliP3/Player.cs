@@ -48,6 +48,7 @@ namespace PelliP3
             else
             {
                 loadAllSongsFromFolder();
+                changeOrder_Click(sender, e);
             }
         }
         
@@ -310,19 +311,73 @@ namespace PelliP3
         }
 
         private void changeOrder_Click(object sender, EventArgs e)
-            // TODO
-        {   // Onclick:
-            //  if orderModes[orderMode].position + 1 > orderModes[].size:
-            //      orderMode = orderModes[0]
-            //  else:
-            //      orderMode = orderModes[orderModes[orderMode].position + 1]
+        {
+            // Determine the next order mode
+            int currentIndex = Array.IndexOf(orderModes, orderMode);
+            int nextIndex = (currentIndex < 0) ? 0 : (currentIndex + 1) % orderModes.Length;
+            orderMode = orderModes[nextIndex];
 
-            // If orderMode = orderModes.ORDER_ASC:
-            //      Re-order songQueue array by alphabetical order
-            // If orderMode = orderModes.ORDER_DESC:
-            //      Re-order songQueue array by reverse alphabetical order
-            // If orderMode = orderModes.ORDER_ALBUM:
-            //      Re-order songQueue array by Album. Songs on the same album are on a chain.
+            // Reorder songQueue according to the selected mode
+            Comparison<Song> compareByName = (a, b) =>
+            {
+                if (a == null && b == null) return 0;
+                if (a == null) return -1;
+                if (b == null) return 1;
+                return string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase);
+            };
+
+            switch (orderMode)
+            {
+                case "ORDER_ASC":
+                    songQueue.Sort(compareByName);
+                    changeOrder.Text = "A → Z";
+                    break;
+
+                case "ORDER_DESC":
+                    songQueue.Sort((a, b) => -compareByName(a, b));
+                    changeOrder.Text = "Z → A";
+                    break;
+
+                case "ORDER_ALBUM":
+                    songQueue.Sort((a, b) =>
+                    {
+                        if (a == null && b == null) return 0;
+                        if (a == null) return -1;
+                        if (b == null) return 1;
+
+                        int albumCompare = string.Compare(a.Album ?? DefaultAlbumName, b.Album ?? DefaultAlbumName, StringComparison.OrdinalIgnoreCase);
+                        if (albumCompare != 0) return albumCompare;
+                        // For songs from the same album, fall back to name (stable grouping)
+                        return string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase);
+                    });
+                    changeOrder.Text = "By Album";
+                    break;
+
+                default:
+                    // Fallback: keep as-is
+                    break;
+            }
+
+            // Preserve selection: clear the old panel reference (it will be recreated by refresh)
+            Song previouslySelected = selectedSong;
+            selectedSongPanel = null; // avoid touching a disposed control in changeSelectedSong
+
+            // Refresh the UI playlist to reflect new order
+            refreshSongPlaylist();
+
+            // Re-select previously selected song in the newly-created controls (if any)
+            if (previouslySelected != null)
+            {
+                foreach (Control ctl in songQueuePanel.Controls)
+                {
+                    if (ctl is Panel p && p.Tag is Song s && string.Equals(s.Path, previouslySelected.Path, StringComparison.OrdinalIgnoreCase))
+                    {
+                        changeSelectedSong(s, p);
+                        break;
+                    }
+                }
+            }
         }
+
     }
 }

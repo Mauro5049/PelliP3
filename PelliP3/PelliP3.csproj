@@ -138,6 +138,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArtworkUtils.cs" />
     <Compile Include="MusicSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,6 +164,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SongQueryResult.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SongQueryResult.Designer.cs">
+      <DependentUpon>SongQueryResult.cs</DependentUpon>
     </Compile>
     <Compile Include="SongUtils.cs" />
     <Compile Include="WindowUtils.cs" />
