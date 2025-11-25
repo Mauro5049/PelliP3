@@ -43,6 +43,7 @@ namespace PelliP3
             this.currentTimeLabel = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playlistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -50,7 +51,6 @@ namespace PelliP3
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeOrder = new System.Windows.Forms.Button();
             this.songCoverPlayer = new System.Windows.Forms.PictureBox();
-            this.diToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.songCoverPlayer)).BeginInit();
@@ -122,6 +122,7 @@ namespace PelliP3
             // songProgressBar
             // 
             this.songProgressBar.Location = new System.Drawing.Point(478, 284);
+            this.songProgressBar.Maximum = 1;
             this.songProgressBar.Name = "songProgressBar";
             this.songProgressBar.Size = new System.Drawing.Size(200, 10);
             this.songProgressBar.TabIndex = 7;
@@ -162,6 +163,14 @@ namespace PelliP3
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // diToolStripMenuItem
+            // 
+            this.diToolStripMenuItem.Image = global::PelliP3.Properties.Resources.icons8_folder_24;
+            this.diToolStripMenuItem.Name = "diToolStripMenuItem";
+            this.diToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.diToolStripMenuItem.Text = "Directory";
+            this.diToolStripMenuItem.Click += new System.EventHandler(this.diToolStripMenuItem_Click);
             // 
             // playlistToolStripMenuItem
             // 
@@ -220,14 +229,6 @@ namespace PelliP3
             this.songCoverPlayer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.songCoverPlayer.TabIndex = 0;
             this.songCoverPlayer.TabStop = false;
-            // 
-            // diToolStripMenuItem
-            // 
-            this.diToolStripMenuItem.Image = global::PelliP3.Properties.Resources.icons8_folder_24;
-            this.diToolStripMenuItem.Name = "diToolStripMenuItem";
-            this.diToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-            this.diToolStripMenuItem.Text = "Directory";
-            this.diToolStripMenuItem.Click += new System.EventHandler(this.diToolStripMenuItem_Click);
             // 
             // mainWindow
             // 
