@@ -41,7 +41,7 @@ namespace PelliP3
             songProgressBar.Minimum = 0;
             songProgressBar.Maximum = ProgressBarResolution;
             songProgressBar.Value = 0;
-            songProgressBar.MouseDown += SongProgressBar_MouseDown;
+            InitializeProgressBarSeeking();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -56,7 +56,6 @@ namespace PelliP3
             {
                 loadAllSongsFromFolder();
                 changeOrder_Click(sender, e);
-                InitializeProgressBarSeeking();
             }
         }
 
@@ -134,64 +133,6 @@ namespace PelliP3
             currentTimeLabel.Text = "00:00:00";
         }
 
-        private bool TryGetTimes(out TimeSpan current, out TimeSpan total)
-        {
-            current = TimeSpan.Zero;
-            total = TimeSpan.Zero;
-            var source = musicPlayer?.getSource();
-            if (source == null) return false;
-            try
-            {
-                PropertyInfo currentProp = source.GetType().GetProperty("CurrentTime");
-                PropertyInfo totalProp = source.GetType().GetProperty("TotalTime");
-                if (currentProp != null && totalProp != null)
-                {
-                    object curObj = currentProp.GetValue(source);
-                    object totObj = totalProp.GetValue(source);
-                    if (curObj is TimeSpan) current = (TimeSpan)curObj;
-                    else if (curObj != null) current = TimeSpan.FromSeconds(Convert.ToDouble(curObj));
-                    if (totObj is TimeSpan) total = (TimeSpan)totObj;
-                    else if (totObj != null) total = TimeSpan.FromSeconds(Convert.ToDouble(totObj));
-                    return true;
-                }
-                PropertyInfo wfProp = source.GetType().GetProperty("WaveFormat");
-                if (wfProp != null)
-                {
-                    object wfObj = wfProp.GetValue(source);
-                    if (wfObj != null)
-                    {
-                        PropertyInfo avgProp = wfObj.GetType().GetProperty("AverageBytesPerSecond");
-                        if (avgProp != null)
-                        {
-                            int avgBytesPerSec = Convert.ToInt32(avgProp.GetValue(wfObj));
-                            if (avgBytesPerSec > 0)
-                            {
-                                PropertyInfo posProp = source.GetType().GetProperty("Position");
-                                PropertyInfo lenProp = source.GetType().GetProperty("Length");
-                                if (posProp != null && lenProp != null)
-                                {
-                                    long pos = Convert.ToInt64(posProp.GetValue(source));
-                                    long len = Convert.ToInt64(lenProp.GetValue(source));
-                                    current = TimeSpan.FromSeconds(pos / (double)avgBytesPerSec);
-                                    total = TimeSpan.FromSeconds(len / (double)avgBytesPerSec);
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (selectedSong != null && selectedSong.Duration > TimeSpan.Zero)
-                {
-                    total = selectedSong.Duration;
-                    return true;
-                }
-            }
-            catch
-            {
-            }
-            return false;
-        }
-
         private void progressBarChange()
         {
             var source = musicPlayer.getSource();
@@ -205,8 +146,9 @@ namespace PelliP3
 
             var currentSeconds = source.Position / (double)bytesPerSecond;
 
-            var progress = (int)((currentSeconds / totalSeconds) * 100);
-            songProgressBar.Value = Math.Min(Math.Max(progress, 0), 100);
+            // Fixed: Calculate progress as value from 0 to ProgressBarResolution (1000)
+            var progress = (int)((currentSeconds / totalSeconds) * ProgressBarResolution);
+            songProgressBar.Value = Math.Min(Math.Max(progress, 0), ProgressBarResolution);
 
             currentTimeLabel.Text = TimeSpan.FromSeconds(currentSeconds).ToString(@"hh\:mm\:ss");
 
@@ -219,10 +161,10 @@ namespace PelliP3
         private void InitializeProgressBarSeeking()
         {
             songProgressBar.Cursor = Cursors.Hand;
-            songProgressBar.Click += SongProgressBar_Click;
+            songProgressBar.Click += progressBar_OnClick;
         }
 
-        private void SongProgressBar_Click(object sender, EventArgs e)
+        private void progressBar_OnClick(object sender, EventArgs e)
         {
             var source = musicPlayer.getSource();
             if (source == null || !source.CanSeek) return;
@@ -230,93 +172,25 @@ namespace PelliP3
             var mouseEventArgs = e as MouseEventArgs;
             if (mouseEventArgs == null) return;
 
-            // Calculate the clicked position as a percentage
-            var clickPosition = mouseEventArgs.X / (double)songProgressBar.Width;
-            clickPosition = Math.Max(0, Math.Min(1, clickPosition)); // Clamp between 0 and 1
+            // Calculate the clicked position as a ratio (0.0 to 1.0)
+            var clickRatio = mouseEventArgs.X / (double)songProgressBar.Width;
+            clickRatio = Math.Max(0, Math.Min(1, clickRatio));
 
-            // Calculate the new position in bytes
-            var newPosition = (long)(source.Length * clickPosition);
+            // Calculate target position in bytes
+            var targetPosition = (long)(source.Length * clickRatio);
+
+            // Align to block boundary
+            var blockAlign = source.WaveFormat.BlockAlign;
+            targetPosition = (targetPosition / blockAlign) * blockAlign;
 
             try
             {
-                source.Position = newPosition;
-                progressBarChange(); // Update the UI immediately
+                source.Position = targetPosition;
+                progressBarChange(); // Update UI immediately
             }
             catch
             {
                 // Seeking failed, ignore
-            }
-        }
-
-        private void SongProgressBar_MouseDown(object sender, MouseEventArgs e)
-        {
-            try
-            {
-                var source = musicPlayer?.getSource();
-                if (source == null) return;
-                PropertyInfo canSeekProp = source.GetType().GetProperty("CanSeek");
-                if (canSeekProp != null)
-                {
-                    bool canSeek = Convert.ToBoolean(canSeekProp.GetValue(source));
-                    if (!canSeek) return;
-                }
-                if (!TryGetTimes(out TimeSpan current, out TimeSpan total)) return;
-                if (total.TotalSeconds <= 0) return;
-                int clickX = e.X;
-                int width = songProgressBar.ClientSize.Width;
-                if (width <= 0) return;
-                double ratio = clickX / (double)width;
-                ratio = Math.Max(0.0, Math.Min(1.0, ratio));
-                var target = TimeSpan.FromSeconds(ratio * total.TotalSeconds);
-                SeekTo(target);
-                progressBarChange();
-            }
-            catch
-            {
-            }
-        }
-
-        private void SeekTo(TimeSpan target)
-        {
-            var source = musicPlayer?.getSource();
-            if (source == null) return;
-            MethodInfo seekMethod = musicPlayer.GetType().GetMethod("Seek", new[] { typeof(TimeSpan) });
-            if (seekMethod != null)
-            {
-                try
-                {
-                    seekMethod.Invoke(musicPlayer, new object[] { target });
-                    return;
-                }
-                catch
-                {
-                }
-            }
-            try
-            {
-                PropertyInfo wfProp = source.GetType().GetProperty("WaveFormat");
-                if (wfProp == null) return;
-                object wfObj = wfProp.GetValue(source);
-                if (wfObj == null) return;
-                PropertyInfo avgProp = wfObj.GetType().GetProperty("AverageBytesPerSecond");
-                PropertyInfo blockAlignProp = wfObj.GetType().GetProperty("BlockAlign");
-                if (avgProp == null || blockAlignProp == null) return;
-                int avgBytesPerSec = Convert.ToInt32(avgProp.GetValue(wfObj));
-                int blockAlign = Convert.ToInt32(blockAlignProp.GetValue(wfObj));
-                if (avgBytesPerSec <= 0 || blockAlign <= 0) return;
-                long targetPos = (long)(target.TotalSeconds * avgBytesPerSec);
-                targetPos -= (targetPos % blockAlign);
-                PropertyInfo lengthProp = source.GetType().GetProperty("Length");
-                if (lengthProp == null) return;
-                long length = Convert.ToInt64(lengthProp.GetValue(source));
-                if (targetPos < 0) targetPos = 0;
-                if (targetPos > length) targetPos = length;
-                PropertyInfo posProp = source.GetType().GetProperty("Position");
-                if (posProp == null) return;
-                posProp.SetValue(source, targetPos);
-            }
-            catch
-            {
             }
         }
 

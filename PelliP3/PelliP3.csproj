@@ -152,9 +152,7 @@
       <DependentUpon>Metadata.cs</DependentUpon>
     </Compile>
     <Compile Include="MusicPlayer.cs" />
-    <Compile Include="Player.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Player.cs" />
     <Compile Include="Player.Designer.cs">
       <DependentUpon>Player.cs</DependentUpon>
     </Compile>
